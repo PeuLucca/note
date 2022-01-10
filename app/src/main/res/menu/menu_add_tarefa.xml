@@ -26,4 +26,12 @@
         android:icon="@drawable/ic_outline_cancel_24"
         />
 
+    <item
+        android:id="@+id/itemCompartilhar"
+        android:title="Compartilhar nota"
+        app:showAsAction="always"
+        android:orderInCategory="1"
+        android:icon="@drawable/ic_share_24"
+        />
+
 </menu>

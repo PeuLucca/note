@@ -3,6 +3,7 @@ package com.example_2_060303.note;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -152,6 +153,30 @@ public class AddTarefa extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(),"Erro ao alterar status da tarefa",Toast.LENGTH_LONG).show();
                             }
                         }
+                }
+
+                break;
+
+            case R.id.itemCompartilhar:
+
+                if(titulo.getText().toString().isEmpty() || conteudo.getText().toString().isEmpty()){
+
+                    Toast.makeText(getApplicationContext(),
+                            "É necessário ter anotações salvas para que possam ser compartilhadas",
+                            Toast.LENGTH_SHORT).show();
+
+                }else {
+
+                    Intent sendIntent = new Intent ();
+                    sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    sendIntent.setAction (Intent.ACTION_SEND);
+                    sendIntent.putExtra (Intent.EXTRA_TEXT, "*Compartilhado através do Bloco de notas - Note*:\n\n" +
+                            "*Título:* " + titulo.getText().toString() + "\n\n*Conteúdo:* \n" + conteudo.getText().toString()
+                    + "\n\n\nBaixe agora https://play.google.com/store/apps/details?id=com.example_2_060303.note");
+                    sendIntent.setPackage ("com.whatsapp");
+                    sendIntent.setType ("text / plain");
+                    startActivity (sendIntent);
+
                 }
 
                 break;

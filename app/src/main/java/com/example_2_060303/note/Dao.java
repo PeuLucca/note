@@ -98,7 +98,7 @@ public class Dao implements IDao {
 
         List<Tarefa> tarefaList = new ArrayList<>();
 
-        String sqlListar = "SELECT * FROM " + DbHelper.TABELA_TAREFA + ";";
+        String sqlListar = "SELECT * FROM " + DbHelper.TABELA_TAREFA + " ORDER BY status;";
         Cursor cursor = le.rawQuery( sqlListar, null );
 
         while(cursor.moveToNext()){
