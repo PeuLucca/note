@@ -7,7 +7,23 @@
         android:title="Salvar"
         app:showAsAction="always"
         android:orderInCategory="1"
+        android:icon="@drawable/ic_save_24"
+        />
+
+    <item
+        android:id="@+id/itemStatusPositivo"
+        android:title="Status: Concluido"
+        app:showAsAction="always"
+        android:orderInCategory="1"
         android:icon="@drawable/ic_check_24"
+        />
+
+    <item
+        android:id="@+id/itemStatusNegativo"
+        android:title="Statu: Não Concluído"
+        app:showAsAction="always"
+        android:orderInCategory="1"
+        android:icon="@drawable/ic_outline_cancel_24"
         />
 
 </menu>
