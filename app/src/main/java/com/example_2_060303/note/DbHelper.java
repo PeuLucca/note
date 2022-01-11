@@ -41,5 +41,19 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
 
+        // ao atualizar para versao 1.5.2, serão feitas essas alterações no banco de dados
+
+        String sqlTarefa = "ALTER TABLE "+ TABELA_TAREFA + " ADD status INTEGER;";
+
+        try {
+
+            db.execSQL( sqlTarefa );
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+
+        }
+
     }
 }

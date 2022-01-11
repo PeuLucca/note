@@ -11,11 +11,11 @@
         android:theme="@style/Theme.Note">
         <activity
             android:name="com.example_2_060303.note.AddTarefa"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:exported="false" />
         <activity
             android:name="com.example_2_060303.note.MainActivity"
-            android:screenOrientation="portrait"
+            android:screenOrientation="fullSensor"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Note.NoActionBar">
