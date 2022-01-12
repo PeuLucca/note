@@ -10,11 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Note">
         <activity
-            android:name="com.example_2_060303.note.AddTarefa"
+            android:name="com.example_2_060303.note.activity.AddTarefa"
             android:screenOrientation="fullSensor"
             android:exported="false" />
         <activity
-            android:name="com.example_2_060303.note.MainActivity"
+            android:name="com.example_2_060303.note.activity.MainActivity"
             android:screenOrientation="fullSensor"
             android:exported="true"
             android:label="@string/app_name"

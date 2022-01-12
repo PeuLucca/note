@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,11 +12,15 @@
         android:id="@+id/txtTituloAdapter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="-6dp"
         android:text="Título"
         android:textAllCaps="true"
         android:textColor="#393939"
         android:textSize="20dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtDescricaoAdapter"
@@ -26,7 +30,9 @@
         android:textAllCaps="false"
         android:textColor="#434343"
         android:textSize="15dp"
-        android:textStyle="italic" />
+        android:textStyle="italic"
+        app:layout_constraintTop_toBottomOf="@+id/txtTituloAdapter"
+        tools:layout_editor_absoluteX="16dp" />
 
     <TextView
         android:id="@+id/txtStatusAdapter"
@@ -35,13 +41,19 @@
         android:text="Status: Não concluída"
         android:textAllCaps="false"
         android:textColor="#434343"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtDescricaoAdapter" />
 
     <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="400dp"
-        android:layout_height="15dp"
+        android:id="@+id/imageView2"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
         android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtStatusAdapter"
         app:srcCompat="@drawable/divisor" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

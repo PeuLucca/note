@@ -1,10 +1,12 @@
-package com.example_2_060303.note;
+package com.example_2_060303.note.helper;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.example_2_060303.note.model.Tarefa;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,15 +139,34 @@ public class Dao implements IDao {
             @SuppressLint("Range") String titulo2 = cursor.getString( cursor.getColumnIndex( "titulo" ) );
             @SuppressLint("Range") String conteudo2 = cursor.getString( cursor.getColumnIndex( "conteudo" ) );
 
-            if( titulo2.isEmpty() || conteudo2.isEmpty() ){
+            if( titulo2.equals("") || conteudo2.equals("") ){
                 resposta = resposta - 1;
             }
         }
 
-        if( resposta == 1 ){
+        if( resposta == 1 ){ // se existir esta tarefa
             return true;
         }
 
-        return false;
+        return false; // se nao existir esta tarefa
+    }
+
+    @Override
+    public boolean verificarStatus(String titulo) {
+
+        List<Tarefa> listTarefa = new ArrayList<>();
+        String sql = "SELECT * FROM " + DbHelper.TABELA_TAREFA +
+                " WHERE titulo = '" + titulo + "';";
+        Cursor cursor = le.rawQuery( sql, null );
+
+        while(cursor.moveToNext()){
+            @SuppressLint("Range") String title = cursor.getString( cursor.getColumnIndex( "titulo" ) );
+            Tarefa tarefa = new Tarefa();
+            tarefa.setTitulo(title);
+
+            listTarefa.add(tarefa);
+        }
+
+        return !listTarefa.isEmpty();
     }
 }

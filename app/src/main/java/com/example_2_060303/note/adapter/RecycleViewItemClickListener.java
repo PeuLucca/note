@@ -1,4 +1,4 @@
-package com.example_2_060303.note;
+package com.example_2_060303.note.adapter;
 
 import android.content.Context;
 import android.view.GestureDetector;

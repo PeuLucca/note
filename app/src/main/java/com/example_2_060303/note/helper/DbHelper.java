@@ -1,4 +1,4 @@
-package com.example_2_060303.note;
+package com.example_2_060303.note.helper;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,7 +22,9 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // apagar tabela se já existir
 
-        String sqlTarefa = "CREATE TABLE IF NOT EXISTS " + TABELA_TAREFA +
+        String sqlDeletarBD = ""; // deletar banco existente, se houver
+
+        String sqlCriarTarefa = "CREATE TABLE IF NOT EXISTS " + TABELA_TAREFA +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                 "status INTEGER," +
                 "titulo TEXT NOT NULL, " +
@@ -31,7 +33,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         try {
 
-            db.execSQL( sqlTarefa );
+            db.execSQL( sqlCriarTarefa );
 
         }catch (Exception e){
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fffcc6"
-    tools:context="com.example_2_060303.note.AddTarefa">
+    tools:context="com.example_2_060303.note.activity.AddTarefa">
 
     <EditText
         android:id="@+id/txtDescricao"

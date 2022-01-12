@@ -1,4 +1,4 @@
-package com.example_2_060303.note;
+package com.example_2_060303.note.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +20,12 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.example_2_060303.note.R;
+import com.example_2_060303.note.adapter.Adapter;
+import com.example_2_060303.note.adapter.RecycleViewItemClickListener;
 import com.example_2_060303.note.databinding.ActivityMainBinding;
+import com.example_2_060303.note.helper.Dao;
+import com.example_2_060303.note.model.Tarefa;
 
 import java.util.ArrayList;
 import java.util.List;
