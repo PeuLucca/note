@@ -3,6 +3,8 @@ package com.example_2_060303.note;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -18,6 +20,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // apagar tabela se já existir
 
         String sqlTarefa = "CREATE TABLE IF NOT EXISTS " + TABELA_TAREFA +
                 "(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
@@ -35,25 +38,10 @@ public class DbHelper extends SQLiteOpenHelper {
             e.printStackTrace();
 
         }
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-
-        // ao atualizar para versao 1.5.2, serão feitas essas alterações no banco de dados
-
-        String sqlTarefa = "ALTER TABLE "+ TABELA_TAREFA + " ADD status INTEGER;";
-
-        try {
-
-            db.execSQL( sqlTarefa );
-
-        }catch (Exception e){
-
-            e.printStackTrace();
-
-        }
 
     }
 }

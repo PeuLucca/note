@@ -14,20 +14,20 @@ public class Dao implements IDao {
     private SQLiteDatabase escreve,le;
 
     public Dao(Context context) {
-        // toda vez ao salvar, deletar, atualizar ou listar
-        DbHelper dbHelper = new DbHelper( context );
-        escreve = dbHelper.getWritableDatabase();
-        le = dbHelper.getReadableDatabase();
+            // toda vez ao salvar, deletar, atualizar ou listar
+            DbHelper dbHelper = new DbHelper( context );
+            escreve = dbHelper.getWritableDatabase();
+            le = dbHelper.getReadableDatabase();
         }
 
     @Override
     public boolean salvar(Tarefa tarefa) {
 
         ContentValues cv = new ContentValues();
+        cv.put( "status" , tarefa.getStatus() );
         cv.put( "titulo" , tarefa.getTitulo() );
         cv.put( "descricao" , tarefa.getDescricao() );
         cv.put( "conteudo" , tarefa.getConteudo() );
-        cv.put( "status" , tarefa.getStatus() );
 
         try{
             escreve.insert( DbHelper.TABELA_TAREFA , null, cv );
@@ -58,10 +58,10 @@ public class Dao implements IDao {
     public boolean atualizar(Tarefa tarefa) {
 
         ContentValues cv = new ContentValues();
+        cv.put( "status" , tarefa.getStatus() );
         cv.put( "titulo" , tarefa.getTitulo() );
         cv.put( "descricao" , tarefa.getDescricao() );
         cv.put( "conteudo" , tarefa.getConteudo() );
-        cv.put( "status" , tarefa.getStatus() );
 
         try{
             String[] args = { tarefa.getId().toString() };
@@ -75,6 +75,7 @@ public class Dao implements IDao {
         return true;
     }
 
+    @Override
     public boolean atualizarStatus(Tarefa tarefa) {
 
         ContentValues cv = new ContentValues();
@@ -106,23 +107,23 @@ public class Dao implements IDao {
             Tarefa tarefa = new Tarefa();
 
             @SuppressLint("Range") Long id = cursor.getLong( cursor.getColumnIndex("id") );
+            @SuppressLint("Range") Long status = cursor.getLong( cursor.getColumnIndex( "status" ) );
             @SuppressLint("Range") String titulo = cursor.getString( cursor.getColumnIndex( "titulo" ) );
             @SuppressLint("Range") String descricao = cursor.getString( cursor.getColumnIndex( "descricao" ) );
             @SuppressLint("Range") String conteudo = cursor.getString( cursor.getColumnIndex( "conteudo" ) );
-            @SuppressLint("Range") int status = cursor.getInt( cursor.getColumnIndex( "status" ) );
 
             tarefa.setId( id );
+            tarefa.setStatus( status );
             tarefa.setTitulo( titulo );
             tarefa.setDescricao( descricao );
             tarefa.setConteudo( conteudo );
-            tarefa.setStatus( status );
-
             tarefaList.add( tarefa );
         }
 
         return tarefaList;
     }
 
+    @Override
     public boolean verificarTarefa(String titulo, String conteudo){
 
         int resposta = 1;
@@ -147,5 +148,4 @@ public class Dao implements IDao {
 
         return false;
     }
-
 }

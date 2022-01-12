@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Tarefa implements Serializable {
 
     private Long id;
-    private int status;
+    private Long status;
     private String titulo;
     private String descricao;
     private String conteudo;
@@ -18,11 +18,11 @@ public class Tarefa implements Serializable {
         this.id = id;
     }
 
-    public int getStatus() {
+    public Long getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Long status) {
         this.status = status;
     }
 

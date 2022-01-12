@@ -65,7 +65,7 @@ public class AddTarefa extends AppCompatActivity {
                         tarefa.setTitulo(tituloString);
                         tarefa.setDescricao(descricaoString);
                         tarefa.setConteudo(conteudoString);
-                        tarefa.setStatus(0);
+                        tarefa.setStatus(0L);
 
                         if (dao.salvar(tarefa)) {
                             finish();
@@ -116,7 +116,7 @@ public class AddTarefa extends AppCompatActivity {
                     // verificar se esta tarefa existe:
                     if ( d.verificarTarefa( titulo.getText().toString(), conteudo.getText().toString() ) ){
 
-                        tarefa.setStatus( 1 ); // tarefa concluida
+                        tarefa.setStatus(1L); // tarefa concluida
 
                         if( d.atualizarStatus(tarefa) ){
                             Toast.makeText(getApplicationContext(),
@@ -146,7 +146,7 @@ public class AddTarefa extends AppCompatActivity {
                         tarefa2.setId( tarefaAtual.getId() );
 
                         if ( d2.verificarTarefa( titulo.getText().toString(), conteudo.getText().toString() ) ){
-                            tarefa2.setStatus( 0 ); // tarefa não concluida
+                            tarefa2.setStatus(0L); // tarefa não concluida
                             if( d2.atualizarStatus(tarefa2) ){
                                 Toast.makeText(getApplicationContext(),"Status alterado para: Não Concluído",Toast.LENGTH_SHORT).show();
                             }else {
