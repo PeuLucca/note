@@ -11,14 +11,6 @@
         />
 
     <item
-        android:id="@+id/itemStatusPositivo"
-        android:title="Status: Concluido"
-        app:showAsAction="always"
-        android:orderInCategory="1"
-        android:icon="@drawable/ic_check_24"
-        />
-
-    <item
         android:id="@+id/itemDelete"
         android:title="Deletar tarefa"
         app:showAsAction="always"
@@ -32,6 +24,24 @@
         app:showAsAction="always"
         android:orderInCategory="1"
         android:icon="@drawable/ic_share_24"
+        />
+
+    <item
+        android:id="@+id/itemStatusPositivo"
+        android:title="Concluido"
+        android:orderInCategory="1"
+        />
+
+    <item
+        android:id="@+id/itemStatusNegativo"
+        android:title="Não Concluido"
+        android:orderInCategory="1"
+        />
+
+    <item
+        android:id="@+id/itemSemStatus"
+        android:title="Sem Status"
+        android:orderInCategory="1"
         />
 
 </menu>

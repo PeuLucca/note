@@ -30,6 +30,29 @@ public class Dao implements IDao {
         cv.put( "titulo" , tarefa.getTitulo() );
         cv.put( "descricao" , tarefa.getDescricao() );
         cv.put( "conteudo" , tarefa.getConteudo() );
+        cv.put( "data" , tarefa.getData() );
+        cv.put( "horario" , tarefa.getHorario() );
+
+        try{
+            escreve.insert( DbHelper.TABELA_TAREFA , null, cv );
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean salvarSemStatus(Tarefa tarefa) {
+
+        ContentValues cv = new ContentValues();
+        cv.put( "status" , tarefa.getStatus() );
+        cv.put( "titulo" , tarefa.getTitulo() );
+        cv.put( "descricao" , tarefa.getDescricao() );
+        cv.put( "conteudo" , tarefa.getConteudo() );
+        cv.put( "data" , tarefa.getData() );
+        cv.put( "horario" , tarefa.getHorario() );
 
         try{
             escreve.insert( DbHelper.TABELA_TAREFA , null, cv );
@@ -64,6 +87,8 @@ public class Dao implements IDao {
         cv.put( "titulo" , tarefa.getTitulo() );
         cv.put( "descricao" , tarefa.getDescricao() );
         cv.put( "conteudo" , tarefa.getConteudo() );
+        cv.put( "data" , tarefa.getData() );
+        cv.put( "horario" , tarefa.getHorario() );
 
         try{
             String[] args = { tarefa.getId().toString() };
@@ -113,12 +138,16 @@ public class Dao implements IDao {
             @SuppressLint("Range") String titulo = cursor.getString( cursor.getColumnIndex( "titulo" ) );
             @SuppressLint("Range") String descricao = cursor.getString( cursor.getColumnIndex( "descricao" ) );
             @SuppressLint("Range") String conteudo = cursor.getString( cursor.getColumnIndex( "conteudo" ) );
+            @SuppressLint("Range") String data = cursor.getString( cursor.getColumnIndex( "data" ) );
+            @SuppressLint("Range") String horario = cursor.getString( cursor.getColumnIndex( "horario" ) );
 
             tarefa.setId( id );
             tarefa.setStatus( status );
             tarefa.setTitulo( titulo );
             tarefa.setDescricao( descricao );
             tarefa.setConteudo( conteudo );
+            tarefa.setData( data );
+            tarefa.setHorario( horario );
             tarefaList.add( tarefa );
         }
 
@@ -152,7 +181,7 @@ public class Dao implements IDao {
     }
 
     @Override
-    public boolean verificarStatus(String titulo) {
+    public boolean verificarExistencia(String titulo) {
 
         List<Tarefa> listTarefa = new ArrayList<>();
         String sql = "SELECT * FROM " + DbHelper.TABELA_TAREFA +
@@ -168,5 +197,24 @@ public class Dao implements IDao {
         }
 
         return !listTarefa.isEmpty();
+    }
+
+    @Override
+    public Tarefa verificarStatus(String titulo) {
+
+        Tarefa tarefa = new Tarefa();
+        String sql = "SELECT * FROM " + DbHelper.TABELA_TAREFA +
+                " WHERE titulo = '" + titulo + "';";
+        Cursor cursor = le.rawQuery( sql, null );
+
+        while(cursor.moveToNext()){
+            @SuppressLint("Range") String title = cursor.getString( cursor.getColumnIndex( "titulo" ) );
+            @SuppressLint("Range") Long status = cursor.getLong(cursor.getColumnIndex( "status" ) );
+
+            tarefa.setTitulo(title);
+            tarefa.setStatus( status );
+        }
+
+        return tarefa;
     }
 }

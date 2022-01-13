@@ -3,12 +3,14 @@ package com.example_2_060303.note.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -16,11 +18,17 @@ import com.example_2_060303.note.R;
 import com.example_2_060303.note.helper.Dao;
 import com.example_2_060303.note.model.Tarefa;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class AddTarefa extends AppCompatActivity {
 
     private EditText titulo, descricao, conteudo;
     private String tituloString, descricaoString, conteudoString;
     private Tarefa tarefaAtual;
+    private Menu menU;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +47,6 @@ public class AddTarefa extends AppCompatActivity {
             descricao.setText( tarefaAtual.getDescricao() );
             conteudo.setText( tarefaAtual.getConteudo() );
         }
-
     }
 
     public void salvar(){
@@ -61,6 +68,17 @@ public class AddTarefa extends AppCompatActivity {
                 tarefa.setConteudo(conteudoString);
                 tarefa.setStatus(0L);
 
+                Date date = new Date();
+                java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
+                dateFormat.format(date); // data atual
+
+                Date d = new Date();
+                SimpleDateFormat sdf= new SimpleDateFormat("hh:mm a");
+                String currentDateTimeString = sdf.format(d); // horario atual
+
+                tarefa.setData( dateFormat.format(date) );
+                tarefa.setHorario( currentDateTimeString );
+
                 if (dao.salvar(tarefa)) {
                     finish();
                     Toast.makeText(getApplicationContext(),
@@ -81,6 +99,18 @@ public class AddTarefa extends AppCompatActivity {
                 tarefa.setTitulo(tituloString);
                 tarefa.setDescricao(descricaoString);
                 tarefa.setConteudo(conteudoString);
+
+                Date date = new Date();
+                java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
+                dateFormat.format(date); // data atual
+
+                Date d = new Date();
+                SimpleDateFormat sdf= new SimpleDateFormat("hh:mm a");
+                String currentDateTimeString = sdf.format(d); // horario atual
+
+                tarefa.setData( dateFormat.format(date) );
+                tarefa.setHorario( currentDateTimeString );
+
                 tarefa.setId( tarefaAtual.getId() );
 
                 if (dao.atualizar(tarefa)) {
@@ -94,14 +124,91 @@ public class AddTarefa extends AppCompatActivity {
 
             }
         }
+    }
 
+    public void salvarSemStatus(){
+
+        tituloString = titulo.getText().toString();
+        descricaoString = descricao.getText().toString();
+        conteudoString = conteudo.getText().toString();
+
+        Dao dao = new Dao(getApplicationContext());
+
+        if( tarefaAtual == null ) { // se for para salvar e nao atualizar
+            if (tituloString.isEmpty() || conteudoString.isEmpty()) {
+                Toast.makeText(getApplicationContext(),
+                        "Insira os campos obrigatórios", Toast.LENGTH_SHORT).show();
+            } else {
+                Tarefa tarefa = new Tarefa();
+                tarefa.setTitulo(tituloString);
+                tarefa.setDescricao(descricaoString);
+                tarefa.setConteudo(conteudoString);
+                tarefa.setStatus(100L);
+
+                Date date = new Date();
+                java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
+                dateFormat.format(date); // data atual
+
+                Date d = new Date();
+                SimpleDateFormat sdf= new SimpleDateFormat("hh:mm a");
+                String currentDateTimeString = sdf.format(d); // horario atual
+
+                tarefa.setData( dateFormat.format(date) );
+                tarefa.setHorario( currentDateTimeString );
+
+                if (dao.salvarSemStatus(tarefa)) {
+                    finish();
+                    Toast.makeText(getApplicationContext(),
+                            "Tarefa salva com sucesso", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Erro ao salvar tarefa", Toast.LENGTH_LONG).show();
+                }
+            }
+        }else{ // se for para atualizar
+
+            if ( tarefaAtual.getTitulo().isEmpty() || tarefaAtual.getConteudo().isEmpty() ) {
+                Toast.makeText(getApplicationContext(),
+                        "Insira os campos obrigatórios", Toast.LENGTH_SHORT).show();
+            }else {
+                Tarefa tarefa = new Tarefa();
+                tarefa.setStatus(100L);
+                tarefa.setTitulo(tituloString);
+                tarefa.setDescricao(descricaoString);
+                tarefa.setConteudo(conteudoString);
+
+                Date date = new Date();
+                java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
+                dateFormat.format(date); // data atual
+
+                Date d = new Date();
+                SimpleDateFormat sdf= new SimpleDateFormat("hh:mm a");
+                String currentDateTimeString = sdf.format(d); // horario atual
+
+                tarefa.setData( dateFormat.format(date) );
+                tarefa.setHorario( currentDateTimeString );
+
+                tarefa.setId( tarefaAtual.getId() );
+
+                if (dao.atualizar(tarefa)) {
+                    finish();
+                    Toast.makeText(getApplicationContext(),
+                            "Tarefa atualizada com sucesso", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(),
+                            "Erro ao atualizar tarefa", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 
     @Override
     public boolean onCreatePanelMenu(int featureId, @NonNull Menu menu) {
         getMenuInflater().inflate( R.menu.menu_add_tarefa, menu );
 
-        return super.onCreatePanelMenu(featureId, menu);
+        this.menU = menu;
+
+        return super.onCreatePanelMenu(featureId, menU);
     }
 
     @Override
@@ -110,7 +217,7 @@ public class AddTarefa extends AppCompatActivity {
         switch (item.getItemId()){
 
             case R.id.itemSalvar:
-                salvar();
+                salvarSemStatus();
                 break;
 
             case R.id.itemStatusPositivo:
@@ -122,29 +229,68 @@ public class AddTarefa extends AppCompatActivity {
 
                     Dao d = new Dao(getApplicationContext());
 
-                    // verificar se esta tarefa existe:
-                    if ( d.verificarStatus( titulo.getText().toString()) ){
+                    if (d.verificarExistencia(titulo.getText().toString())) {
 
                         Tarefa tarefa = new Tarefa();
-                        tarefa.setId( tarefaAtual.getId() );
+                        tarefa.setId(tarefaAtual.getId());
                         tarefa.setStatus(1L); // tarefa concluida
 
                         salvar();
 
-                        if( d.atualizarStatus(tarefa) ){
+                        if (d.atualizarStatus(tarefa)) {
                             finish();
-                        }else {
+                        } else {
                             Toast.makeText(getApplicationContext(),
-                                    "Erro ao alterar status da tarefa",Toast.LENGTH_LONG).show();
+                                    "Erro ao alterar status da tarefa", Toast.LENGTH_LONG).show();
                         }
 
-                    }else {
+                    } else {
                         Toast.makeText(getApplicationContext(),
-                                "Você precisa salvar sua tarefa, e então mudar seu status",Toast.LENGTH_LONG).show();
+                                "Você precisa salvar sua tarefa, e então mudar seu status", Toast.LENGTH_LONG).show();
                     }
                 }
 
                 break;
+
+            case R.id.itemStatusNegativo:
+
+                if( titulo.getText().toString().isEmpty() || conteudo.getText().toString().isEmpty() ){
+                    Toast.makeText(getApplicationContext(),
+                            "Salve uma tarefa antes de alterar seu status", Toast.LENGTH_SHORT).show();
+                }else {
+
+                    Dao d = new Dao(getApplicationContext());
+
+                    if (d.verificarExistencia(titulo.getText().toString())) {
+
+                        Tarefa tarefa = new Tarefa();
+                        tarefa.setId(tarefaAtual.getId());
+                        tarefa.setStatus(0L); // tarefa nao concluida }
+
+                        salvar();
+
+                        if (d.atualizarStatus(tarefa)) {
+                            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    "Erro ao alterar status da tarefa", Toast.LENGTH_LONG).show();
+                        }
+
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "Você precisa salvar sua tarefa, e então mudar seu status", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                break;
+
+            case R.id.itemSemStatus:
+
+                // salvar sem status
+                salvarSemStatus();
+
+                break;
+
 
             case R.id.itemDelete:
 

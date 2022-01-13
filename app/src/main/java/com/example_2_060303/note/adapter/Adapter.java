@@ -1,5 +1,6 @@
 package com.example_2_060303.note.adapter;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example_2_060303.note.R;
 import com.example_2_060303.note.model.Tarefa;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
@@ -19,9 +22,11 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
     private List<Tarefa> listaTarefa;
     private final String textoStatus = "Status: ";
     private final String textoDescricao = "Descricao: ";
+    private Context context;
 
-    public Adapter(List<Tarefa> lista) {
+    public Adapter(List<Tarefa> lista, Context context) {
         this.listaTarefa = lista;
+        this.context = context;
     }
 
     @NonNull
@@ -39,15 +44,23 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
 
         Tarefa tarefa = listaTarefa.get( position );
         holder.titulo.setText( tarefa.getTitulo() );
-        holder.descricao.setText(textoDescricao + tarefa.getDescricao() );
+        holder.descricao.setText(tarefa.getDescricao() );
 
-        if(tarefa.getStatus()!=1){
-            holder.status.setTextColor( Color.parseColor("#E43232") );
-            holder.status.setText(textoStatus + "Não concluído");
-        }else{
-            holder.status.setTextColor( Color.parseColor("#55AB48") );
-            holder.status.setText(textoStatus + "Concluído");
+        if( tarefa.getStatus().equals(100L) ){ // tarefa sem status
+            holder.status.setText( "Sem Status" );
+        }else {
+            if(tarefa.getStatus().equals(0L)){
+                holder.status.setTextColor( Color.parseColor("#E43232") );
+                holder.status.setText(textoStatus + "Não concluído");
+            }else if( tarefa.getStatus().equals(1L) ){
+                holder.status.setTextColor( Color.parseColor("#55AB48") );
+                holder.status.setText(textoStatus + "Concluído");
+            }
         }
+
+        holder.data.setText( tarefa.getData() );
+        holder.hra.setText( tarefa.getHorario() );
+
     }
 
     @Override
@@ -57,7 +70,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView titulo,descricao,status;
+        private TextView titulo,descricao,status,data,hra;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,6 +78,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
             titulo = itemView.findViewById(R.id.txtTituloAdapter);
             descricao = itemView.findViewById(R.id.txtDescricaoAdapter);
             status = itemView.findViewById(R.id.txtStatusAdapter);
+            data = itemView.findViewById(R.id.txtData);
+            hra = itemView.findViewById(R.id.txtHra);
         }
     }
 }

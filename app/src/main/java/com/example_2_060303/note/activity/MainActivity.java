@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         Dao dao = new Dao(getApplicationContext());
         tarefaList = dao.listar();
 
-        Adapter adapter = new Adapter( tarefaList );
+        Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
         recycler.setLayoutManager( layoutManager );

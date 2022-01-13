@@ -9,6 +9,8 @@ public class Tarefa implements Serializable {
     private String titulo;
     private String descricao;
     private String conteudo;
+    private String data;
+    private String horario;
 
     public Long getId() {
         return id;
@@ -48,5 +50,21 @@ public class Tarefa implements Serializable {
 
     public void setConteudo(String conteudo) {
         this.conteudo = conteudo;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public String getHorario() {
+        return horario;
+    }
+
+    public void setHorario(String horario) {
+        this.horario = horario;
     }
 }
