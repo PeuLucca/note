@@ -36,7 +36,7 @@
         android:ems="10"
         android:hint="Título ex: filmes para assistir "
         android:inputType="textPersonName"
-        android:maxLength="30"
+        android:maxLength="33"
         android:minHeight="48dp"
         android:textColor="@color/black"
         android:textColorHint="#494949"

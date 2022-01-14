@@ -10,9 +10,13 @@ public interface IDao {
     public boolean salvarSemStatus(Tarefa tarefa);
     public boolean deletar(Tarefa tarefa);
     public boolean atualizar(Tarefa tarefa);
-    public List<Tarefa>listar();
+    public List<Tarefa>listar(String ordenarPor);
+    public List<Tarefa>listarSttsConcluido();
+    public List<Tarefa>listarSttsNaoConcluido();
+    public List<Tarefa>listarSemStts();
     public boolean atualizarStatus(Tarefa tarefa);
-    public boolean verificarTarefa(String titulo, String conteudo);
+    public List<Tarefa> verificarTarefa(String titulo, String conteudo);
     public boolean verificarExistencia(String titulo);
     public Tarefa verificarStatus (String titulo);
+    public List<Tarefa>listarTitulo();
 }

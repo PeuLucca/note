@@ -9,17 +9,10 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="135dp"
         android:background="#43302a"
+        android:elevation="0dp"
         android:theme="@style/Theme.Note.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:visibility="gone"
-            app:popupTheme="@style/Theme.Note.PopupOverlay" />
 
         <ImageView
             android:id="@+id/imageView"
@@ -29,9 +22,25 @@
             android:paddingTop="15dp"
             app:srcCompat="@drawable/logo" />
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="-25dp"
+            android:layout_marginRight="0dp"
+            android:background="#43302a"
+            android:elevation="0dp"
+            android:visibility="visible"
+            app:popupTheme="@style/Theme.Note.PopupOverlay"
+            android:theme="@style/Theme.Note.PopupOverlay"
+            tools:visibility="visible" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <include
+        layout="@layout/content_main"
+        android:elevation="0dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

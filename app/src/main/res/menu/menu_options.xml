@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/itemOrdenarPrioridade"
+        android:title="Ordenar por prioridade"
+        android:orderInCategory="1"
+        />
+
+    <item
+        android:id="@+id/itemOrdenarStatusConcluido"
+        android:title="Filtrar por Status Concluido"
+        android:orderInCategory="1"
+        />
+
+    <item
+        android:id="@+id/itemOrdenarStatusNaoConcluido"
+        android:title="Filtrar por Status Não Concluido"
+        android:orderInCategory="1"
+        />
+
+    <item
+        android:id="@+id/itemOrdenarSemStatus"
+        android:title="Filtrar por Sem Status"
+        android:orderInCategory="1"
+        />
+
+    <item
+        android:id="@+id/itemOrdenarA_Z"
+        android:title="Ordenar de A-Z"
+        android:orderInCategory="1"
+        />
+
+    <item
+        android:id="@+id/itemOrdenarData"
+        android:title="Ordenar por Data"
+        android:orderInCategory="1"
+        />
+
+    <item
+        android:id="@+id/itemExibirFav"
+        android:title="Exibir apenas favoritos"
+        android:orderInCategory="1"
+        />
+    <!--
+        <item
+            android:id="@+id/itemConf"
+            android:title="Configurações"
+            android:orderInCategory="1"
+            />
+    -->
+</menu>

@@ -297,7 +297,10 @@ public class AddTarefa extends AppCompatActivity {
                 Dao dao2 = new Dao(getApplicationContext());
                 if(!titulo.getText().toString().equals("") && !conteudo.getText().toString().equals("")){
 
-                    if( dao2.verificarTarefa(titulo.getText().toString(),conteudo.getText().toString()) ) {
+                    List<Tarefa> lista = new ArrayList<>();
+                    lista = dao2.verificarTarefa(titulo.getText().toString(),conteudo.getText().toString());
+
+                    if( !lista.isEmpty() ) {
 
                         AlertDialog.Builder dialog = new AlertDialog.Builder( AddTarefa.this );
                         dialog.setTitle( "Confirmar exclusão\n" );

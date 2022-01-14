@@ -122,11 +122,11 @@ public class Dao implements IDao {
 
     @SuppressLint("Range")
     @Override
-    public List<Tarefa> listar() {
+    public List<Tarefa> listar(String ordenarPor) {
 
         List<Tarefa> tarefaList = new ArrayList<>();
 
-        String sqlListar = "SELECT * FROM " + DbHelper.TABELA_TAREFA + " ORDER BY status;";
+        String sqlListar = "SELECT * FROM " + DbHelper.TABELA_TAREFA + " ORDER BY " + ordenarPor + ";";
         Cursor cursor = le.rawQuery( sqlListar, null );
 
         while(cursor.moveToNext()){
@@ -155,8 +155,105 @@ public class Dao implements IDao {
     }
 
     @Override
-    public boolean verificarTarefa(String titulo, String conteudo){
+    public List<Tarefa> listarSttsConcluido() {
+        List<Tarefa> tarefaList = new ArrayList<>();
 
+        String sqlListar = "SELECT * FROM " + DbHelper.TABELA_TAREFA + " WHERE status = 1";
+        Cursor cursor = le.rawQuery( sqlListar, null );
+
+        while(cursor.moveToNext()){
+
+            Tarefa tarefa = new Tarefa();
+
+            @SuppressLint("Range") Long id = cursor.getLong( cursor.getColumnIndex("id") );
+            @SuppressLint("Range") Long status = cursor.getLong( cursor.getColumnIndex( "status" ) );
+            @SuppressLint("Range") String titulo = cursor.getString( cursor.getColumnIndex( "titulo" ) );
+            @SuppressLint("Range") String descricao = cursor.getString( cursor.getColumnIndex( "descricao" ) );
+            @SuppressLint("Range") String conteudo = cursor.getString( cursor.getColumnIndex( "conteudo" ) );
+            @SuppressLint("Range") String data = cursor.getString( cursor.getColumnIndex( "data" ) );
+            @SuppressLint("Range") String horario = cursor.getString( cursor.getColumnIndex( "horario" ) );
+
+            tarefa.setId( id );
+            tarefa.setStatus( status );
+            tarefa.setTitulo( titulo );
+            tarefa.setDescricao( descricao );
+            tarefa.setConteudo( conteudo );
+            tarefa.setData( data );
+            tarefa.setHorario( horario );
+            tarefaList.add( tarefa );
+        }
+
+        return tarefaList;
+    }
+
+    @Override
+    public List<Tarefa> listarSttsNaoConcluido() {
+        List<Tarefa> tarefaList = new ArrayList<>();
+
+        String sqlListar = "SELECT * FROM " + DbHelper.TABELA_TAREFA + " WHERE status = 0";
+        Cursor cursor = le.rawQuery( sqlListar, null );
+
+        while(cursor.moveToNext()){
+
+            Tarefa tarefa = new Tarefa();
+
+            @SuppressLint("Range") Long id = cursor.getLong( cursor.getColumnIndex("id") );
+            @SuppressLint("Range") Long status = cursor.getLong( cursor.getColumnIndex( "status" ) );
+            @SuppressLint("Range") String titulo = cursor.getString( cursor.getColumnIndex( "titulo" ) );
+            @SuppressLint("Range") String descricao = cursor.getString( cursor.getColumnIndex( "descricao" ) );
+            @SuppressLint("Range") String conteudo = cursor.getString( cursor.getColumnIndex( "conteudo" ) );
+            @SuppressLint("Range") String data = cursor.getString( cursor.getColumnIndex( "data" ) );
+            @SuppressLint("Range") String horario = cursor.getString( cursor.getColumnIndex( "horario" ) );
+
+            tarefa.setId( id );
+            tarefa.setStatus( status );
+            tarefa.setTitulo( titulo );
+            tarefa.setDescricao( descricao );
+            tarefa.setConteudo( conteudo );
+            tarefa.setData( data );
+            tarefa.setHorario( horario );
+            tarefaList.add( tarefa );
+        }
+
+        return tarefaList;
+    }
+
+    @Override
+    public List<Tarefa> listarSemStts() {
+        List<Tarefa> tarefaList = new ArrayList<>();
+
+        String sqlListar = "SELECT * FROM " + DbHelper.TABELA_TAREFA + " WHERE status = 100";
+        Cursor cursor = le.rawQuery( sqlListar, null );
+
+        while(cursor.moveToNext()){
+
+            Tarefa tarefa = new Tarefa();
+
+            @SuppressLint("Range") Long id = cursor.getLong( cursor.getColumnIndex("id") );
+            @SuppressLint("Range") Long status = cursor.getLong( cursor.getColumnIndex( "status" ) );
+            @SuppressLint("Range") String titulo = cursor.getString( cursor.getColumnIndex( "titulo" ) );
+            @SuppressLint("Range") String descricao = cursor.getString( cursor.getColumnIndex( "descricao" ) );
+            @SuppressLint("Range") String conteudo = cursor.getString( cursor.getColumnIndex( "conteudo" ) );
+            @SuppressLint("Range") String data = cursor.getString( cursor.getColumnIndex( "data" ) );
+            @SuppressLint("Range") String horario = cursor.getString( cursor.getColumnIndex( "horario" ) );
+
+            tarefa.setId( id );
+            tarefa.setStatus( status );
+            tarefa.setTitulo( titulo );
+            tarefa.setDescricao( descricao );
+            tarefa.setConteudo( conteudo );
+            tarefa.setData( data );
+            tarefa.setHorario( horario );
+            tarefaList.add( tarefa );
+        }
+
+        return tarefaList;
+    }
+
+    @Override
+    public List<Tarefa> verificarTarefa(String titulo, String conteudo){
+
+        List<Tarefa> lista = new ArrayList<>();
         int resposta = 1;
 
         String sqlListar = "SELECT * FROM " + DbHelper.TABELA_TAREFA +
@@ -165,19 +262,27 @@ public class Dao implements IDao {
 
         while(cursor.moveToNext()){
 
+            @SuppressLint("Range") Long id = cursor.getLong( cursor.getColumnIndex("id") );
             @SuppressLint("Range") String titulo2 = cursor.getString( cursor.getColumnIndex( "titulo" ) );
             @SuppressLint("Range") String conteudo2 = cursor.getString( cursor.getColumnIndex( "conteudo" ) );
 
-            if( titulo2.equals("") || conteudo2.equals("") ){
+            /*if( titulo2.equals("") || conteudo2.equals("") ){
                 resposta = resposta - 1;
-            }
+            }*/
+
+            Tarefa tarefa = new Tarefa();
+            tarefa.setId( id );
+            tarefa.setTitulo( titulo2 );
+            tarefa.setConteudo( conteudo2 );
+
+            lista.add( tarefa );
         }
 
-        if( resposta == 1 ){ // se existir esta tarefa
+        /*if( resposta == 1 ){ // se existir esta tarefa
             return true;
-        }
+        }*/
 
-        return false; // se nao existir esta tarefa
+        return lista; // se nao existir esta tarefa
     }
 
     @Override
@@ -197,6 +302,40 @@ public class Dao implements IDao {
         }
 
         return !listTarefa.isEmpty();
+    }
+
+    @SuppressLint("Range")
+    @Override
+    public List<Tarefa> listarTitulo() {
+
+        List<Tarefa> tarefaList = new ArrayList<>();
+
+        String sqlListar = "SELECT * FROM " + DbHelper.TABELA_TAREFA + " ORDER BY titulo ASC;";
+        Cursor cursor = le.rawQuery( sqlListar, null );
+
+        while(cursor.moveToNext()){
+
+            Tarefa tarefa = new Tarefa();
+
+            @SuppressLint("Range") Long id = cursor.getLong( cursor.getColumnIndex("id") );
+            @SuppressLint("Range") Long status = cursor.getLong( cursor.getColumnIndex( "status" ) );
+            @SuppressLint("Range") String titulo = cursor.getString( cursor.getColumnIndex( "titulo" ) );
+            @SuppressLint("Range") String descricao = cursor.getString( cursor.getColumnIndex( "descricao" ) );
+            @SuppressLint("Range") String conteudo = cursor.getString( cursor.getColumnIndex( "conteudo" ) );
+            @SuppressLint("Range") String data = cursor.getString( cursor.getColumnIndex( "data" ) );
+            @SuppressLint("Range") String horario = cursor.getString( cursor.getColumnIndex( "horario" ) );
+
+            tarefa.setId( id );
+            tarefa.setStatus( status );
+            tarefa.setTitulo( titulo );
+            tarefa.setDescricao( descricao );
+            tarefa.setConteudo( conteudo );
+            tarefa.setData( data );
+            tarefa.setHorario( horario );
+            tarefaList.add( tarefa );
+        }
+
+        return tarefaList;
     }
 
     @Override

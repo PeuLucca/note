@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 //import com.example.note.R;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Tarefa> tarefaList = new ArrayList<>();
     private RecyclerView recycler;
     private Tarefa tarefaSelected;
+    private int itemSelected;
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -45,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        // DbHelper dbHelper = new DbHelper(getApplicationContext());
 
         recycler = findViewById(R.id.recyclerView);
 
@@ -75,10 +75,68 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        Dao dao = new Dao( getApplicationContext() );
-                        if( dao.deletar( tarefaSelected ) ){
+                        Dao daoDeletar = new Dao( getApplicationContext() );
+                        if( daoDeletar.deletar( tarefaSelected ) ){
 
-                            carregarLista();
+                            if( itemSelected == 0 ){
+                                carregarLista();
+                            }else if( itemSelected == 1 ){
+
+                                Dao dao = new Dao(getApplicationContext());
+                                tarefaList = dao.listarTitulo();
+
+                                Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
+
+                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
+                                recycler.setLayoutManager( layoutManager );
+                                recycler.setHasFixedSize(true);
+                                recycler.setAdapter( adapter );
+
+                            } else if( itemSelected == 2 ){
+
+                                Dao dao = new Dao(getApplicationContext());
+                                tarefaList = dao.listar( "data" ); // carregando lista baseado no status (status,titulo,horario)
+
+                                Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
+
+                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
+                                recycler.setLayoutManager( layoutManager );
+                                recycler.setHasFixedSize(true);
+                                recycler.setAdapter( adapter );
+                            } else if( itemSelected == 3 ){
+
+                                Dao dao = new Dao(getApplicationContext());
+                                tarefaList = dao.listarSttsConcluido();
+
+                                Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
+
+                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
+                                recycler.setLayoutManager( layoutManager );
+                                recycler.setHasFixedSize(true);
+                                recycler.setAdapter( adapter );
+                            } else if( itemSelected == 4 ){
+
+                                Dao dao = new Dao(getApplicationContext());
+                                tarefaList = dao.listarSttsNaoConcluido();
+
+                                Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
+
+                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
+                                recycler.setLayoutManager( layoutManager );
+                                recycler.setHasFixedSize(true);
+                                recycler.setAdapter( adapter );
+                            } else if( itemSelected == 5 ){
+
+                                Dao dao = new Dao(getApplicationContext());
+                                tarefaList = dao.listarSemStts();
+
+                                Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
+
+                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
+                                recycler.setLayoutManager( layoutManager );
+                                recycler.setHasFixedSize(true);
+                                recycler.setAdapter( adapter );
+                            }
 
                         }else{
                             Toast.makeText(getApplicationContext(),
@@ -115,37 +173,135 @@ public class MainActivity extends AppCompatActivity {
 
     public void carregarLista(){
 
+
         // listar as tarefas salvas
         Dao dao = new Dao(getApplicationContext());
-        tarefaList = dao.listar();
+        tarefaList = dao.listar( "status" ); // carregando lista baseado no status (status,titulo,horario)
 
         Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
         recycler.setLayoutManager( layoutManager );
         recycler.setHasFixedSize(true);
-        //recycler.addItemDecoration( new DividerItemDecoration( getApplicationContext(), LinearLayoutManager.VERTICAL ));
         recycler.setAdapter( adapter );
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_options, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()){
+
+            case R.id.itemOrdenarPrioridade: // 0
+
+                itemSelected = 0;
+
+                Dao dao0 = new Dao(getApplicationContext());
+                tarefaList = dao0.listar( "status" );
+
+                Adapter adapter0 = new Adapter( tarefaList,getApplicationContext() );
+
+                RecyclerView.LayoutManager layoutManager0 = new LinearLayoutManager( getApplicationContext() );
+                recycler.setLayoutManager( layoutManager0 );
+                recycler.setHasFixedSize(true);
+                recycler.setAdapter( adapter0 );
+
+                break;
+
+            case R.id.itemOrdenarA_Z: // 1
+
+                itemSelected = 1;
+
+                // listar as tarefas salvas
+                Dao dao1 = new Dao(getApplicationContext());
+                tarefaList = dao1.listarTitulo();
+
+                Adapter adapter1 = new Adapter( tarefaList,getApplicationContext() );
+
+                RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager( getApplicationContext() );
+                recycler.setLayoutManager( layoutManager1 );
+                recycler.setHasFixedSize(true);
+                recycler.setAdapter( adapter1 );
+
+                break;
+
+            case R.id.itemOrdenarData: // 2
+
+                itemSelected = 2;
+
+                // listar as tarefas salvas
+                Dao dao2 = new Dao(getApplicationContext());
+                tarefaList = dao2.listar( "data" ); // carregando lista baseado no status (status,titulo,horario)
+
+                Adapter adapter2 = new Adapter( tarefaList,getApplicationContext() );
+
+                RecyclerView.LayoutManager layoutManager2 = new LinearLayoutManager( getApplicationContext() );
+                recycler.setLayoutManager( layoutManager2 );
+                recycler.setHasFixedSize(true);
+                recycler.setAdapter( adapter2 );
+
+                break;
+
+
+            case R.id.itemOrdenarStatusConcluido: // 3
+
+                itemSelected = 3;
+
+                Dao dao3 = new Dao(getApplicationContext());
+                tarefaList = dao3.listarSttsConcluido();
+
+                Adapter adapter3 = new Adapter( tarefaList,getApplicationContext() );
+
+                RecyclerView.LayoutManager layoutManager3 = new LinearLayoutManager( getApplicationContext() );
+                recycler.setLayoutManager( layoutManager3 );
+                recycler.setHasFixedSize(true);
+                recycler.setAdapter( adapter3 );
+                break;
+
+            case R.id.itemOrdenarStatusNaoConcluido: // 4
+
+                itemSelected = 4;
+
+                Dao dao4 = new Dao(getApplicationContext());
+                tarefaList = dao4.listarSttsNaoConcluido();
+
+                Adapter adapter4 = new Adapter( tarefaList,getApplicationContext() );
+
+                RecyclerView.LayoutManager layoutManager4 = new LinearLayoutManager( getApplicationContext() );
+                recycler.setLayoutManager( layoutManager4 );
+                recycler.setHasFixedSize(true);
+                recycler.setAdapter( adapter4 );
+                break;
+
+            case R.id.itemOrdenarSemStatus: // 5
+
+                itemSelected = 5;
+
+                Dao dao5 = new Dao(getApplicationContext());
+                tarefaList = dao5.listarSemStts();
+
+                Adapter adapter5 = new Adapter( tarefaList,getApplicationContext() );
+
+                RecyclerView.LayoutManager layoutManager5 = new LinearLayoutManager( getApplicationContext() );
+                recycler.setLayoutManager( layoutManager5 );
+                recycler.setHasFixedSize(true);
+                recycler.setAdapter( adapter5 );
+                break;
+
+            case R.id.itemExibirFav:
+
+                Toast.makeText(getApplicationContext(),
+                        "Em progresso...",Toast.LENGTH_SHORT).show();
+
+                break;
         }
+
 
         return super.onOptionsItemSelected(item);
     }
