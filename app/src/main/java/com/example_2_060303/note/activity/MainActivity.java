@@ -294,12 +294,12 @@ public class MainActivity extends AppCompatActivity {
                 recycler.setAdapter( adapter5 );
                 break;
 
-            case R.id.itemExibirFav:
+            /*case R.id.itemExibirFav:
 
                 Toast.makeText(getApplicationContext(),
                         "Em progresso...",Toast.LENGTH_SHORT).show();
 
-                break;
+                break;*/
         }
 
 

@@ -38,12 +38,13 @@
         android:orderInCategory="1"
         />
 
+<!--
     <item
         android:id="@+id/itemExibirFav"
         android:title="Exibir apenas favoritos"
         android:orderInCategory="1"
         />
-    <!--
+
         <item
             android:id="@+id/itemConf"
             android:title="Configurações"

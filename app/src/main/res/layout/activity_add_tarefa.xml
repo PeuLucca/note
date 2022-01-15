@@ -32,7 +32,6 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="20dp"
-        android:background="#FFFCC6"
         android:ems="10"
         android:hint="Título ex: filmes para assistir "
         android:inputType="textPersonName"
