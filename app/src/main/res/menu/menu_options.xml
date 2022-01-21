@@ -4,7 +4,19 @@
 
     <item
         android:id="@+id/itemOrdenarPrioridade"
-        android:title="Ordenar por prioridade"
+        android:title="Ordenar Padrão"
+        android:orderInCategory="1"
+        />
+
+    <item
+        android:id="@+id/itemOrdenarA_Z"
+        android:title="Ordenar de A-Z"
+        android:orderInCategory="1"
+        />
+
+    <item
+        android:id="@+id/itemOrdenarData"
+        android:title="Ordenar por Data"
         android:orderInCategory="1"
         />
 
@@ -26,25 +38,14 @@
         android:orderInCategory="1"
         />
 
-    <item
-        android:id="@+id/itemOrdenarA_Z"
-        android:title="Ordenar de A-Z"
-        android:orderInCategory="1"
-        />
 
-    <item
-        android:id="@+id/itemOrdenarData"
-        android:title="Ordenar por Data"
-        android:orderInCategory="1"
-        />
 
-<!--
     <item
         android:id="@+id/itemExibirFav"
-        android:title="Exibir apenas favoritos"
+        android:title="Filtrar por Favoritos"
         android:orderInCategory="1"
         />
-
+<!--
         <item
             android:id="@+id/itemConf"
             android:title="Configurações"

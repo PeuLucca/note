@@ -11,6 +11,14 @@
         />
 
     <item
+        android:id="@+id/itemFavoritar"
+        android:title="Favoritar"
+        app:showAsAction="always"
+        android:orderInCategory="1"
+        android:icon="@drawable/ic_baseline_star_border_24"
+        />
+
+    <item
         android:id="@+id/itemDelete"
         android:title="Deletar tarefa"
         app:showAsAction="always"

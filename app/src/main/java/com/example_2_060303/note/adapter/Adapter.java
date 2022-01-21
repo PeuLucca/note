@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -61,6 +62,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
         holder.data.setText( tarefa.getData() );
         holder.hra.setText( tarefa.getHorario() );
 
+        if( !tarefa.getFavorito().equals(0L) ){
+            holder.imgFav.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -71,6 +75,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
         private TextView titulo,descricao,status,data,hra;
+        private TextView imgFav;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -80,6 +85,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> {
             status = itemView.findViewById(R.id.txtStatusAdapter);
             data = itemView.findViewById(R.id.txtData);
             hra = itemView.findViewById(R.id.txtHra);
+
+            imgFav = itemView.findViewById(R.id.imgFav);
         }
     }
 }

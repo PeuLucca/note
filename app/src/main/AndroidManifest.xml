@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example_2_060303.note">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Note">
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider1872727672914335"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" />
+
         <activity
             android:name="com.example_2_060303.note.activity.AddTarefa"
             android:screenOrientation="fullSensor"
@@ -24,6 +34,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
     </application>
 

@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-    public static int VERSION_DB = 2;
+    public static int VERSION_DB = 3;
     public static String NOME_DB = "db_note";
     public static String TABELA_TAREFA = "tarefa";
     private static final String sqlDeletarTBLA = "DROP TABLE IF EXISTS " + TABELA_TAREFA + ";";
@@ -19,20 +19,24 @@ public class DbHelper extends SQLiteOpenHelper {
             "status INTEGER," +
             "titulo TEXT NOT NULL, " +
             "descricao TEXT, " +
-            "conteudo TEXT NOT NULL);";
+            "conteudo TEXT NOT NULL, " +
+            "data TEXT, " +
+            "horario TEXT, " +
+            "favoritar INTEGER);";
     private static final String sqlAddData = "ALTER TABLE " + TABELA_TAREFA + " ADD COLUMN data TEXT;";
     private static final String sqlAddHra = "ALTER TABLE " + TABELA_TAREFA + " ADD COLUMN horario TEXT;";
+    private static final String sqlAddFavorito = "ALTER TABLE " + TABELA_TAREFA + "" +
+            " ADD COLUMN favoritar INTEGER;";
 
     public DbHelper(@Nullable Context context) {
         super(context, NOME_DB, null, VERSION_DB);
-        // context.deleteDatabase(NOME_DB);
+         //context.deleteDatabase(NOME_DB);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
         try {
-            db.execSQL( sqlDeletarTBLA );
             db.execSQL( sqlCriarTarefa );
 
         }catch (Exception e){
@@ -45,14 +49,15 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
         try {
-
             if( oldVersion < 2 ){
                 db.execSQL( sqlAddData );
                 db.execSQL( sqlAddHra );
             }
+            if( oldVersion < 3 ){
+                db.execSQL( sqlAddFavorito );
+            }
 
         }catch (Exception e){
-
             e.printStackTrace();
         }
     }

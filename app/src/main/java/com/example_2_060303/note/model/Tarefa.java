@@ -11,6 +11,7 @@ public class Tarefa implements Serializable {
     private String conteudo;
     private String data;
     private String horario;
+    private Long favorito;
 
     public Long getId() {
         return id;
@@ -66,5 +67,13 @@ public class Tarefa implements Serializable {
 
     public void setHorario(String horario) {
         this.horario = horario;
+    }
+
+    public Long getFavorito() {
+        return favorito;
+    }
+
+    public void setFavorito(Long favorito) {
+        this.favorito = favorito;
     }
 }

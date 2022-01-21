@@ -8,6 +8,8 @@ import androidx.core.content.ContextCompat;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -110,6 +112,7 @@ public class AddTarefa extends AppCompatActivity {
 
                 tarefa.setData( dateFormat.format(date) );
                 tarefa.setHorario( currentDateTimeString );
+                tarefa.setFavorito( tarefaAtual.getFavorito() );
 
                 tarefa.setId( tarefaAtual.getId() );
 
@@ -187,6 +190,7 @@ public class AddTarefa extends AppCompatActivity {
 
                 tarefa.setData( dateFormat.format(date) );
                 tarefa.setHorario( currentDateTimeString );
+                tarefa.setFavorito( tarefaAtual.getFavorito() );
 
                 tarefa.setId( tarefaAtual.getId() );
 
@@ -198,6 +202,35 @@ public class AddTarefa extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),
                             "Erro ao atualizar tarefa", Toast.LENGTH_SHORT).show();
                 }
+            }
+        }
+    }
+
+    public void favoritarTarefa(){
+
+        if( titulo.getText().toString().isEmpty() || conteudo.getText().toString().isEmpty() ){
+            Toast.makeText(getApplicationContext(),
+                    "Salve a anotação para poder favoritar",Toast.LENGTH_SHORT).show();
+        }else {
+            Dao dao = new Dao(getApplicationContext());
+
+            if( dao.verificarFav(titulo.getText().toString(),conteudo.getText().toString()) ){
+                Tarefa tarefa = new Tarefa();
+
+                if( tarefaAtual.getFavorito().equals(1L) ){
+                    tarefa.setFavorito(0L);
+                }else if( tarefaAtual.getFavorito().equals(0L) ){
+                    tarefa.setFavorito(1L);
+                }
+                tarefa.setId( tarefaAtual.getId() );
+
+                if( dao.atualizarFav(tarefa) ){
+                    Toast.makeText(getApplicationContext(),"Salvo",Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(getApplicationContext(),"Erro ao favoritar/desfavoritar tarefa",Toast.LENGTH_SHORT).show();
+                }
+            }else {
+                Toast.makeText(getApplicationContext(),"Tarefa não existente. Salve a tarefa e então tente favoritar",Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -220,6 +253,10 @@ public class AddTarefa extends AppCompatActivity {
                 salvarSemStatus();
                 break;
 
+            case R.id.itemFavoritar:
+                favoritarTarefa();
+                break;
+
             case R.id.itemStatusPositivo:
 
                 if( titulo.getText().toString().isEmpty() || conteudo.getText().toString().isEmpty() ){
@@ -234,6 +271,7 @@ public class AddTarefa extends AppCompatActivity {
                         Tarefa tarefa = new Tarefa();
                         tarefa.setId(tarefaAtual.getId());
                         tarefa.setStatus(1L); // tarefa concluida
+                        tarefa.setFavorito( tarefaAtual.getFavorito() );
 
                         salvar();
 
@@ -265,7 +303,8 @@ public class AddTarefa extends AppCompatActivity {
 
                         Tarefa tarefa = new Tarefa();
                         tarefa.setId(tarefaAtual.getId());
-                        tarefa.setStatus(0L); // tarefa nao concluida }
+                        tarefa.setStatus(0L); // tarefa nao concluida
+                        tarefa.setFavorito( tarefaAtual.getFavorito() );
 
                         salvar();
 
@@ -290,7 +329,6 @@ public class AddTarefa extends AppCompatActivity {
                 salvarSemStatus();
 
                 break;
-
 
             case R.id.itemDelete:
 
@@ -361,7 +399,7 @@ public class AddTarefa extends AppCompatActivity {
                             "\n\nDescrição: \n" + descricao.getText().toString() +
                             "\n\n*Conteúdo:* \n" + conteudo.getText().toString() +
                             "\n\n\nBaixe agora https://play.google.com/store/apps/details?id=com.example_2_060303.note");
-                    sendIntent.setPackage ("com.whatsapp");
+                    //sendIntent.setPackage ("com.whatsapp");
                     sendIntent.setType ("text / plain");
                     startActivity (sendIntent);
 

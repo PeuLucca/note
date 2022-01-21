@@ -2,6 +2,7 @@ package com.example_2_060303.note.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 //import com.example.note.R;
@@ -26,6 +27,7 @@ import com.example_2_060303.note.adapter.Adapter;
 import com.example_2_060303.note.adapter.RecycleViewItemClickListener;
 import com.example_2_060303.note.databinding.ActivityMainBinding;
 import com.example_2_060303.note.helper.Dao;
+import com.example_2_060303.note.helper.DbHelper;
 import com.example_2_060303.note.model.Tarefa;
 
 import java.util.ArrayList;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //DbHelper dbHelper = new DbHelper(getApplicationContext());
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -129,6 +133,17 @@ public class MainActivity extends AppCompatActivity {
 
                                 Dao dao = new Dao(getApplicationContext());
                                 tarefaList = dao.listarSemStts();
+
+                                Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
+
+                                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
+                                recycler.setLayoutManager( layoutManager );
+                                recycler.setHasFixedSize(true);
+                                recycler.setAdapter( adapter );
+                            }else if( itemSelected == 6 ){
+
+                                Dao dao = new Dao(getApplicationContext());
+                                tarefaList = dao.listarFav();
 
                                 Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
 
@@ -294,12 +309,21 @@ public class MainActivity extends AppCompatActivity {
                 recycler.setAdapter( adapter5 );
                 break;
 
-            /*case R.id.itemExibirFav:
+            case R.id.itemExibirFav:
 
-                Toast.makeText(getApplicationContext(),
-                        "Em progresso...",Toast.LENGTH_SHORT).show();
+                itemSelected = 6;
 
-                break;*/
+                Dao dao6 = new Dao(getApplicationContext());
+                tarefaList = dao6.listarFav();
+
+                Adapter adapter6 = new Adapter( tarefaList,getApplicationContext() );
+
+                RecyclerView.LayoutManager layoutManager6 = new LinearLayoutManager( getApplicationContext() );
+                recycler.setLayoutManager( layoutManager6 );
+                recycler.setHasFixedSize(true);
+                recycler.setAdapter( adapter6 );
+
+                break;
         }
 
 
