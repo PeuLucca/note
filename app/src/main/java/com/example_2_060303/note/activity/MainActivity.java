@@ -1,8 +1,17 @@
 package com.example_2_060303.note.activity;
 
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 //import com.example.note.R;
@@ -13,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +31,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.CalendarView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example_2_060303.note.R;
@@ -28,12 +41,19 @@ import com.example_2_060303.note.adapter.RecycleViewItemClickListener;
 import com.example_2_060303.note.databinding.ActivityMainBinding;
 import com.example_2_060303.note.helper.Dao;
 import com.example_2_060303.note.helper.DbHelper;
+import com.example_2_060303.note.model.Alarm;
 import com.example_2_060303.note.model.Tarefa;
 
+import java.text.SimpleDateFormat;
+import java.time.MonthDay;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import hotchemi.android.rate.AppRate;
+
+public class MainActivity extends AppCompatActivity{
 
     private List<Tarefa> tarefaList = new ArrayList<>();
     private RecyclerView recycler;
@@ -46,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        rateUs(); // para avaliação na play store:
 
         //DbHelper dbHelper = new DbHelper(getApplicationContext());
 
@@ -186,8 +208,34 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
-    public void carregarLista(){
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        int time = 604800; // 15 dias = 1296000 e 7 dias = 604800 e 9 dias = 777.600
+        Intent i = new Intent(MainActivity.this, Alarm.class);
 
+        PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(),0,i,0);
+
+        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+        am.set(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+time*1000,pi);
+    }
+
+    public void rateUs(){
+        AppRate.with(this)
+                .setInstallDays(5) // quantos dias depois que instalou o app para aparecer este dialogo
+                .setLaunchTimes(7) // quantas vezes abrir o app para aparecer este dialogo
+                .setRemindInterval(1) // quantos dias para aparecer de novo depois do usuario
+                // clicar em "Talves mais tarde"
+                .setTitle("Está curtindo o app?")
+                .setMessage("Ajude-nos e avalie enviando seu feedback para Play Store! ⭐⭐⭐⭐⭐")
+                .setTextNever("Nunca")
+                .setTextRateNow("Avaliar agora")
+                .setTextLater("Talves mais tarde")
+                .monitor();
+        AppRate.showRateDialogIfMeetsConditions(this);
+    }
+
+    public void carregarLista(){
 
         // listar as tarefas salvas
         Dao dao = new Dao(getApplicationContext());

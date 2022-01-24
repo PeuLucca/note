@@ -394,12 +394,18 @@ public class AddTarefa extends AppCompatActivity {
                     Intent sendIntent = new Intent ();
                     sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     sendIntent.setAction (Intent.ACTION_SEND);
-                    sendIntent.putExtra (Intent.EXTRA_TEXT, "*Compartilhado através do Bloco de notas - Note*:\n\n" +
-                            "*Título:* " + titulo.getText().toString() +
-                            "\n\nDescrição: \n" + descricao.getText().toString() +
-                            "\n\n*Conteúdo:* \n" + conteudo.getText().toString() +
-                            "\n\n\nBaixe agora https://play.google.com/store/apps/details?id=com.example_2_060303.note");
-                    //sendIntent.setPackage ("com.whatsapp");
+                    if( !descricao.getText().toString().isEmpty() ){
+                        sendIntent.putExtra (Intent.EXTRA_TEXT, "Compartilhado através do Bloco de notas - Note:\n\n" +
+                                "Título: " + titulo.getText().toString() +
+                                "\n\nDescrição: \n" + descricao.getText().toString() +
+                                "\n\nConteúdo: \n" + conteudo.getText().toString() +
+                                "\n\n\nBaixe agora https://play.google.com/store/apps/details?id=com.example_2_060303.note");
+                    }else {
+                        sendIntent.putExtra (Intent.EXTRA_TEXT, "Compartilhado através do Bloco de notas - Note:\n\n" +
+                                "Título: " + titulo.getText().toString() +
+                                "\n\nConteúdo: \n" + conteudo.getText().toString() +
+                                "\n\n\nBaixe agora https://play.google.com/store/apps/details?id=com.example_2_060303.note");
+                    }
                     sendIntent.setType ("text / plain");
                     startActivity (sendIntent);
 
