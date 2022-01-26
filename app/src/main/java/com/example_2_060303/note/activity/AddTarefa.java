@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AddTarefa extends AppCompatActivity {
 
@@ -31,6 +33,8 @@ public class AddTarefa extends AppCompatActivity {
     private String tituloString, descricaoString, conteudoString;
     private Tarefa tarefaAtual;
     private Menu menU;
+
+    private String title,desc,cont;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,56 @@ public class AddTarefa extends AppCompatActivity {
             titulo.setText( tarefaAtual.getTitulo() );
             descricao.setText( tarefaAtual.getDescricao() );
             conteudo.setText( tarefaAtual.getConteudo() );
+
+            title = tarefaAtual.getTitulo();
+            desc = tarefaAtual.getDescricao();
+            cont = tarefaAtual.getConteudo();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if(!titulo.getText().toString().equals("") &&
+                !conteudo.getText().toString().equals("") ){
+
+            if( titulo.getText().toString().equals(title) &&
+                    descricao.getText().toString().equals(desc) &&
+                    conteudo.getText().toString().equals(cont)
+            ) {
+
+                finish();
+
+            }else {
+
+                if( !titulo.getText().toString().equals(title) ||
+                        !descricao.getText().toString().equals(desc) ||
+                        !conteudo.getText().toString().equals(cont)
+                ){
+                    AlertDialog.Builder dialog2 = new AlertDialog.Builder(AddTarefa.this);
+                    dialog2.setTitle("Atenção!");
+                    dialog2.setMessage("Deseja salvar as alterações antes de sair?");
+                    dialog2.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    });
+
+                    dialog2.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            salvarSemStatus();
+                        }
+                    });
+                    dialog2.create().show();
+                }
+
+
+            }
+
+        }else {
+            finish();
         }
     }
 
@@ -97,32 +151,37 @@ public class AddTarefa extends AppCompatActivity {
                         "Insira os campos obrigatórios", Toast.LENGTH_SHORT).show();
             }else {
 
-                Tarefa tarefa = new Tarefa();
-                tarefa.setTitulo(tituloString);
-                tarefa.setDescricao(descricaoString);
-                tarefa.setConteudo(conteudoString);
-
-                Date date = new Date();
-                java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
-                dateFormat.format(date); // data atual
-
-                Date d = new Date();
-                SimpleDateFormat sdf= new SimpleDateFormat("hh:mm a");
-                String currentDateTimeString = sdf.format(d); // horario atual
-
-                tarefa.setData( dateFormat.format(date) );
-                tarefa.setHorario( currentDateTimeString );
-                tarefa.setFavorito( tarefaAtual.getFavorito() );
-
-                tarefa.setId( tarefaAtual.getId() );
-
-                if (dao.atualizar(tarefa)) {
-                    finish();
+                if( titulo.getText().toString().equals("") || conteudo.getText().toString().equals("") ){
                     Toast.makeText(getApplicationContext(),
-                            "Tarefa atualizada com sucesso", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(),
-                            "Erro ao atualizar tarefa", Toast.LENGTH_SHORT).show();
+                            "Insira os campos obrigatórios", Toast.LENGTH_SHORT).show();
+                }else {
+                    Tarefa tarefa = new Tarefa();
+                    tarefa.setTitulo(tituloString);
+                    tarefa.setDescricao(descricaoString);
+                    tarefa.setConteudo(conteudoString);
+
+                    Date date = new Date();
+                    java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
+                    dateFormat.format(date); // data atual
+
+                    Date d = new Date();
+                    SimpleDateFormat sdf= new SimpleDateFormat("hh:mm a");
+                    String currentDateTimeString = sdf.format(d); // horario atual
+
+                    tarefa.setData( dateFormat.format(date) );
+                    tarefa.setHorario( currentDateTimeString );
+                    tarefa.setFavorito( tarefaAtual.getFavorito() );
+
+                    tarefa.setId( tarefaAtual.getId() );
+
+                    if (dao.atualizar(tarefa)) {
+                        finish();
+                        Toast.makeText(getApplicationContext(),
+                                "Tarefa atualizada com sucesso", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "Erro ao atualizar tarefa", Toast.LENGTH_SHORT).show();
+                    }
                 }
 
             }
@@ -174,34 +233,41 @@ public class AddTarefa extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),
                         "Insira os campos obrigatórios", Toast.LENGTH_SHORT).show();
             }else {
-                Tarefa tarefa = new Tarefa();
-                tarefa.setStatus(100L);
-                tarefa.setTitulo(tituloString);
-                tarefa.setDescricao(descricaoString);
-                tarefa.setConteudo(conteudoString);
 
-                Date date = new Date();
-                java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
-                dateFormat.format(date); // data atual
-
-                Date d = new Date();
-                SimpleDateFormat sdf= new SimpleDateFormat("hh:mm a");
-                String currentDateTimeString = sdf.format(d); // horario atual
-
-                tarefa.setData( dateFormat.format(date) );
-                tarefa.setHorario( currentDateTimeString );
-                tarefa.setFavorito( tarefaAtual.getFavorito() );
-
-                tarefa.setId( tarefaAtual.getId() );
-
-                if (dao.atualizar(tarefa)) {
-                    finish();
+                if( titulo.getText().toString().equals("") || conteudo.getText().toString().equals("") ){
                     Toast.makeText(getApplicationContext(),
-                            "Tarefa atualizada com sucesso", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(),
-                            "Erro ao atualizar tarefa", Toast.LENGTH_SHORT).show();
+                            "Insira os campos obrigatórios", Toast.LENGTH_SHORT).show();
+                }else {
+                    Tarefa tarefa = new Tarefa();
+                    tarefa.setStatus(100L);
+                    tarefa.setTitulo(tituloString);
+                    tarefa.setDescricao(descricaoString);
+                    tarefa.setConteudo(conteudoString);
+
+                    Date date = new Date();
+                    java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
+                    dateFormat.format(date); // data atual
+
+                    Date d = new Date();
+                    SimpleDateFormat sdf= new SimpleDateFormat("hh:mm a");
+                    String currentDateTimeString = sdf.format(d); // horario atual
+
+                    tarefa.setData( dateFormat.format(date) );
+                    tarefa.setHorario( currentDateTimeString );
+                    tarefa.setFavorito( tarefaAtual.getFavorito() );
+
+                    tarefa.setId( tarefaAtual.getId() );
+
+                    if (dao.atualizar(tarefa)) {
+                        finish();
+                        Toast.makeText(getApplicationContext(),
+                                "Tarefa atualizada com sucesso", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "Erro ao atualizar tarefa", Toast.LENGTH_SHORT).show();
+                    }
                 }
+
             }
         }
     }
