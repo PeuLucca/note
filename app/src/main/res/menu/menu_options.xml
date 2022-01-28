@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/pesquisar_por_nome"
+        android:title="Pesquisar por nome"
+        android:orderInCategory="1"
+        />
+
+    <item
         android:id="@+id/itemOrdenarPrioridade"
         android:title="Ordenar Padrão"
         android:orderInCategory="1"

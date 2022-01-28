@@ -1,5 +1,6 @@
 package com.example_2_060303.note.activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -17,11 +18,14 @@ import android.os.Bundle;
 //import com.example.note.R;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Parcelable;
 import android.view.View;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -31,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -43,13 +48,16 @@ import com.example_2_060303.note.helper.Dao;
 import com.example_2_060303.note.helper.DbHelper;
 import com.example_2_060303.note.model.Alarm;
 import com.example_2_060303.note.model.Tarefa;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.time.MonthDay;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Predicate;
 
 import hotchemi.android.rate.AppRate;
 
@@ -59,6 +67,7 @@ public class MainActivity extends AppCompatActivity{
     private RecyclerView recycler;
     private Tarefa tarefaSelected;
     private int itemSelected;
+    private FloatingActionButton fab;
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -74,6 +83,7 @@ public class MainActivity extends AppCompatActivity{
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        fab = findViewById(R.id.fab);
         recycler = findViewById(R.id.recyclerView);
 
         setSupportActionBar(binding.toolbar);
@@ -235,6 +245,7 @@ public class MainActivity extends AppCompatActivity{
         AppRate.showRateDialogIfMeetsConditions(this);
     }
 
+    @SuppressLint("ResourceAsColor")
     public void carregarLista(){
 
         // listar as tarefas salvas
@@ -247,6 +258,12 @@ public class MainActivity extends AppCompatActivity{
         recycler.setLayoutManager( layoutManager );
         recycler.setHasFixedSize(true);
         recycler.setAdapter( adapter );
+
+        if(tarefaList.size() > 5){
+            fab.setAlpha(0.60f);
+        }else {
+            fab.setAlpha(1f);
+        }
     }
 
     @Override
@@ -260,6 +277,15 @@ public class MainActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()){
+
+
+            case R.id.pesquisar_por_nome:
+                List<Tarefa> tarefa = tarefaList;
+                Intent intent = new Intent( MainActivity.this, PesquisarTarefa.class );
+                intent.putExtra( "tarefa" , (Serializable) tarefa);
+                startActivity( intent );
+
+                break;
 
             case R.id.itemOrdenarPrioridade: // 0
 

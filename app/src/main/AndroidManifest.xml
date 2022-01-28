@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example_2_060303.note">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="false"
@@ -11,32 +11,40 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Note">
+        <activity
+            android:name=".activity.PesquisarTarefa"
+            android:exported="false" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/facebook_client_token" />
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider1872727672914335"
+        <provider
             android:name="com.facebook.FacebookContentProvider"
+            android:authorities="com.facebook.app.FacebookContentProvider1872727672914335"
             android:exported="true" />
 
         <activity
-            android:name="com.example_2_060303.note.activity.AddTarefa"
-            android:screenOrientation="fullSensor"
-            android:exported="false" />
+            android:name=".activity.AddTarefa"
+            android:exported="false"
+            android:screenOrientation="fullSensor" />
         <activity
-            android:name="com.example_2_060303.note.activity.MainActivity"
-            android:screenOrientation="fullSensor"
+            android:name=".activity.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:screenOrientation="fullSensor"
             android:theme="@style/Theme.Note.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <receiver android:name=".model.Alarm"/>
+
+        <receiver android:name=".model.Alarm" />
     </application>
 
 </manifest>

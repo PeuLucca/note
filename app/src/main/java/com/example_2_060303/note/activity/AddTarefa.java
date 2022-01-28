@@ -34,7 +34,7 @@ public class AddTarefa extends AppCompatActivity {
     private Tarefa tarefaAtual;
     private Menu menU;
 
-    private String title,desc,cont;
+    private String title = "",desc = "",cont = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +91,11 @@ public class AddTarefa extends AppCompatActivity {
                     dialog2.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            salvarSemStatus();
+                            if( title.equals("") && cont.equals("") ){
+                                salvar(100L);
+                            }else {
+                                salvar(tarefaAtual.getStatus());
+                            }
                         }
                     });
                     dialog2.create().show();
@@ -105,7 +109,7 @@ public class AddTarefa extends AppCompatActivity {
         }
     }
 
-    public void salvar(){
+    public void salvar(Long stts){
 
         tituloString = titulo.getText().toString();
         descricaoString = descricao.getText().toString();
@@ -122,7 +126,7 @@ public class AddTarefa extends AppCompatActivity {
                 tarefa.setTitulo(tituloString);
                 tarefa.setDescricao(descricaoString);
                 tarefa.setConteudo(conteudoString);
-                tarefa.setStatus(0L);
+                tarefa.setStatus(stts);
 
                 Date date = new Date();
                 java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
@@ -170,90 +174,7 @@ public class AddTarefa extends AppCompatActivity {
 
                     tarefa.setData( dateFormat.format(date) );
                     tarefa.setHorario( currentDateTimeString );
-                    tarefa.setFavorito( tarefaAtual.getFavorito() );
-
-                    tarefa.setId( tarefaAtual.getId() );
-
-                    if (dao.atualizar(tarefa)) {
-                        finish();
-                        Toast.makeText(getApplicationContext(),
-                                "Tarefa atualizada com sucesso", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(),
-                                "Erro ao atualizar tarefa", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-            }
-        }
-    }
-
-    public void salvarSemStatus(){
-
-        tituloString = titulo.getText().toString();
-        descricaoString = descricao.getText().toString();
-        conteudoString = conteudo.getText().toString();
-
-        Dao dao = new Dao(getApplicationContext());
-
-        if( tarefaAtual == null ) { // se for para salvar e nao atualizar
-            if (tituloString.isEmpty() || conteudoString.isEmpty()) {
-                Toast.makeText(getApplicationContext(),
-                        "Insira os campos obrigatórios", Toast.LENGTH_SHORT).show();
-            } else {
-                Tarefa tarefa = new Tarefa();
-                tarefa.setTitulo(tituloString);
-                tarefa.setDescricao(descricaoString);
-                tarefa.setConteudo(conteudoString);
-                tarefa.setStatus(100L);
-
-                Date date = new Date();
-                java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
-                dateFormat.format(date); // data atual
-
-                Date d = new Date();
-                SimpleDateFormat sdf= new SimpleDateFormat("hh:mm a");
-                String currentDateTimeString = sdf.format(d); // horario atual
-
-                tarefa.setData( dateFormat.format(date) );
-                tarefa.setHorario( currentDateTimeString );
-
-                if (dao.salvarSemStatus(tarefa)) {
-                    finish();
-                    Toast.makeText(getApplicationContext(),
-                            "Tarefa salva com sucesso", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(),
-                            "Erro ao salvar tarefa", Toast.LENGTH_LONG).show();
-                }
-            }
-        }else{ // se for para atualizar
-
-            if ( tarefaAtual.getTitulo().isEmpty() || tarefaAtual.getConteudo().isEmpty() ) {
-                Toast.makeText(getApplicationContext(),
-                        "Insira os campos obrigatórios", Toast.LENGTH_SHORT).show();
-            }else {
-
-                if( titulo.getText().toString().equals("") || conteudo.getText().toString().equals("") ){
-                    Toast.makeText(getApplicationContext(),
-                            "Insira os campos obrigatórios", Toast.LENGTH_SHORT).show();
-                }else {
-                    Tarefa tarefa = new Tarefa();
-                    tarefa.setStatus(100L);
-                    tarefa.setTitulo(tituloString);
-                    tarefa.setDescricao(descricaoString);
-                    tarefa.setConteudo(conteudoString);
-
-                    Date date = new Date();
-                    java.text.DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(getApplicationContext());
-                    dateFormat.format(date); // data atual
-
-                    Date d = new Date();
-                    SimpleDateFormat sdf= new SimpleDateFormat("hh:mm a");
-                    String currentDateTimeString = sdf.format(d); // horario atual
-
-                    tarefa.setData( dateFormat.format(date) );
-                    tarefa.setHorario( currentDateTimeString );
+                    tarefa.setStatus(stts);
                     tarefa.setFavorito( tarefaAtual.getFavorito() );
 
                     tarefa.setId( tarefaAtual.getId() );
@@ -276,7 +197,7 @@ public class AddTarefa extends AppCompatActivity {
 
         if( titulo.getText().toString().isEmpty() || conteudo.getText().toString().isEmpty() ){
             Toast.makeText(getApplicationContext(),
-                    "Salve a anotação para poder favoritar",Toast.LENGTH_SHORT).show();
+                    "Salve a anotação para favoritar",Toast.LENGTH_SHORT).show();
         }else {
             Dao dao = new Dao(getApplicationContext());
 
@@ -291,12 +212,18 @@ public class AddTarefa extends AppCompatActivity {
                 tarefa.setId( tarefaAtual.getId() );
 
                 if( dao.atualizarFav(tarefa) ){
-                    Toast.makeText(getApplicationContext(),"Salvo",Toast.LENGTH_SHORT).show();
+                    if( tarefaAtual.getFavorito().equals(0L) ){
+                        Toast.makeText(getApplicationContext(),"Favoritado",Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(getApplicationContext(),"Desfavoritado",Toast.LENGTH_SHORT).show();
+                    }
+
                 }else {
                     Toast.makeText(getApplicationContext(),"Erro ao favoritar/desfavoritar tarefa",Toast.LENGTH_SHORT).show();
                 }
             }else {
-                Toast.makeText(getApplicationContext(),"Tarefa não existente. Salve a tarefa e então tente favoritar",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        "Salve a tarefa e então tente favoritar/desfavoritar",Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -316,7 +243,11 @@ public class AddTarefa extends AppCompatActivity {
         switch (item.getItemId()){
 
             case R.id.itemSalvar:
-                salvarSemStatus();
+                if( title.equals("") && cont.equals("") ){
+                    salvar(100L);
+                }else {
+                    salvar(tarefaAtual.getStatus());
+                }
                 break;
 
             case R.id.itemFavoritar:
@@ -329,29 +260,7 @@ public class AddTarefa extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),
                             "Salve uma tarefa antes de alterar seu status", Toast.LENGTH_SHORT).show();
                 }else {
-
-                    Dao d = new Dao(getApplicationContext());
-
-                    if (d.verificarExistencia(titulo.getText().toString())) {
-
-                        Tarefa tarefa = new Tarefa();
-                        tarefa.setId(tarefaAtual.getId());
-                        tarefa.setStatus(1L); // tarefa concluida
-                        tarefa.setFavorito( tarefaAtual.getFavorito() );
-
-                        salvar();
-
-                        if (d.atualizarStatus(tarefa)) {
-                            finish();
-                        } else {
-                            Toast.makeText(getApplicationContext(),
-                                    "Erro ao alterar status da tarefa", Toast.LENGTH_LONG).show();
-                        }
-
-                    } else {
-                        Toast.makeText(getApplicationContext(),
-                                "Você precisa salvar sua tarefa, e então mudar seu status", Toast.LENGTH_LONG).show();
-                    }
+                    salvar(1L);
                 }
 
                 break;
@@ -362,29 +271,7 @@ public class AddTarefa extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),
                             "Salve uma tarefa antes de alterar seu status", Toast.LENGTH_SHORT).show();
                 }else {
-
-                    Dao d = new Dao(getApplicationContext());
-
-                    if (d.verificarExistencia(titulo.getText().toString())) {
-
-                        Tarefa tarefa = new Tarefa();
-                        tarefa.setId(tarefaAtual.getId());
-                        tarefa.setStatus(0L); // tarefa nao concluida
-                        tarefa.setFavorito( tarefaAtual.getFavorito() );
-
-                        salvar();
-
-                        if (d.atualizarStatus(tarefa)) {
-                            finish();
-                        } else {
-                            Toast.makeText(getApplicationContext(),
-                                    "Erro ao alterar status da tarefa", Toast.LENGTH_LONG).show();
-                        }
-
-                    } else {
-                        Toast.makeText(getApplicationContext(),
-                                "Você precisa salvar sua tarefa, e então mudar seu status", Toast.LENGTH_LONG).show();
-                    }
+                    salvar(0L);
                 }
 
                 break;
@@ -392,7 +279,7 @@ public class AddTarefa extends AppCompatActivity {
             case R.id.itemSemStatus:
 
                 // salvar sem status
-                salvarSemStatus();
+                salvar(100L);
 
                 break;
 
