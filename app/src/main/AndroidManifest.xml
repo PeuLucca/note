@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Note">
         <activity
+            android:name=".activity.AddTarefaRapida"
+            android:exported="false" />
+        <activity
             android:name=".activity.PesquisarTarefa"
             android:exported="false" />
 

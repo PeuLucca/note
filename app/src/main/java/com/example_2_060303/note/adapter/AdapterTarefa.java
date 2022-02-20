@@ -1,5 +1,6 @@
 package com.example_2_060303.note.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -7,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,21 +16,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example_2_060303.note.R;
 import com.example_2_060303.note.model.Tarefa;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> implements Filterable {
+public class AdapterTarefa extends RecyclerView.Adapter<AdapterTarefa.MyViewHolder> implements Filterable {
 
     private List<Tarefa> listaTarefa;
     private List<Tarefa> listaTarefaAll;
-    private final String textoStatus = "Status: ";
-    private final String textoDescricao = "Descricao: ";
     private Context context;
 
-    public Adapter(List<Tarefa> lista, Context context) {
+    public AdapterTarefa(List<Tarefa> lista, Context context) {
         this.listaTarefa = lista;
         this.context = context;
 
@@ -42,27 +38,34 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> implemen
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.lista_adapter ,parent,false);
+                .inflate(R.layout.list_adapter ,parent,false);
 
         return new MyViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
         Tarefa tarefa = listaTarefa.get( position );
         holder.titulo.setText( tarefa.getTitulo() );
-        holder.descricao.setText(tarefa.getDescricao() );
+
+        if( !tarefa.getDescricao().isEmpty() ){ // se tiver descricao entao mostra a descricao
+            holder.descricao.setText( tarefa.getDescricao() );
+        }else { // se não tiver descricao entao remove a visibilidade
+            holder.descricao.setVisibility( View.GONE );
+        }
 
         if( tarefa.getStatus().equals(100L) ){ // tarefa sem status
-            holder.status.setText( "Sem Status" );
+            holder.status.setText( R.string.semSttsPT );
         }else {
             if(tarefa.getStatus().equals(0L)){
                 holder.status.setTextColor( Color.parseColor("#E43232") );
-                holder.status.setText(textoStatus + "Não concluído");
+                holder.status.setText( context.getResources().getString(R.string.statusPT) + " "+ context.getResources().getString(R.string.naoConcluidoPT) );
             }else if( tarefa.getStatus().equals(1L) ){
                 holder.status.setTextColor( Color.parseColor("#55AB48") );
-                holder.status.setText(textoStatus + "Concluído");
+                holder.status.setText( context.getResources().getString(R.string.statusPT) + " " + context.getResources().getString(R.string.concluidoPT) );
+
             }
         }
 
@@ -123,13 +126,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.MyViewHolder> implemen
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            titulo = itemView.findViewById(R.id.txtTituloAdapter);
-            descricao = itemView.findViewById(R.id.txtDescricaoAdapter);
-            status = itemView.findViewById(R.id.txtStatusAdapter);
-            data = itemView.findViewById(R.id.txtData);
-            hra = itemView.findViewById(R.id.txtHra);
+            titulo = itemView.findViewById(R.id.txtTituloAdapter1);
+            descricao = itemView.findViewById(R.id.txtDescricaoAdapter1);
+            status = itemView.findViewById(R.id.txtStatusAdapter1);
+            data = itemView.findViewById(R.id.txtData1);
+            hra = itemView.findViewById(R.id.txtHra1);
 
-            imgFav = itemView.findViewById(R.id.imgFav);
+            imgFav = itemView.findViewById(R.id.imgFav1);
         }
     }
 }

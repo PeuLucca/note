@@ -42,7 +42,7 @@
         layout="@layout/content_main"
         android:elevation="0dp" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+   <!-- <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,6 +51,45 @@
         android:layout_marginBottom="16dp"
         app:backgroundTint="#61463E"
         app:srcCompat="@drawable/ic_add_24"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="SpeakableTextPresentCheck" /> -->
+
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/addTarefaGeral"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="10dp"
+            app:menu_colorNormal="#61463E"
+            app:menu_colorPressed="#61463E"
+            app:menu_icon="@drawable/ic_add_24">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/addTarefa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_add_24"
+                app:fab_colorNormal="#61463E"
+                app:fab_label="@string/criarTarefaNormal"
+                android:onClick="addTarefa"
+                app:fab_colorPressed="#61463E"
+                app:fab_size="mini">
+
+            </com.github.clans.fab.FloatingActionButton>
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/addTarefaRapida"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_create_24"
+                app:fab_colorNormal="#61463E"
+                app:fab_label="@string/criarTarefaPostIt"
+                android:onClick="addTarefaRapida"
+                app:fab_colorPressed="#61463E"
+                app:fab_size="mini">
+
+            </com.github.clans.fab.FloatingActionButton>
+
+        </com.github.clans.fab.FloatingActionMenu>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

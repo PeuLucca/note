@@ -2,32 +2,19 @@ package com.example_2_060303.note.activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
-import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 //import com.example.note.R;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 
-import androidx.appcompat.widget.SearchView;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,39 +22,40 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.CalendarView;
-import android.widget.TimePicker;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example_2_060303.note.R;
-import com.example_2_060303.note.adapter.Adapter;
+import com.example_2_060303.note.adapter.AdapterTarefa;
+import com.example_2_060303.note.adapter.AdapterTarefaRapida;
 import com.example_2_060303.note.adapter.RecycleViewItemClickListener;
 import com.example_2_060303.note.databinding.ActivityMainBinding;
-import com.example_2_060303.note.helper.Dao;
-import com.example_2_060303.note.helper.DbHelper;
+import com.example_2_060303.note.helper.DaoTarefa;
+import com.example_2_060303.note.helper.DaoTarefaRapida;
 import com.example_2_060303.note.model.Alarm;
 import com.example_2_060303.note.model.Tarefa;
+import com.example_2_060303.note.model.Tarefa_Rapida;
+import com.github.clans.fab.FloatingActionMenu;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.time.MonthDay;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.function.Predicate;
 
 import hotchemi.android.rate.AppRate;
 
 public class MainActivity extends AppCompatActivity{
 
     private List<Tarefa> tarefaList = new ArrayList<>();
-    private RecyclerView recycler;
+    private List<Tarefa_Rapida> tarefaRapidaList = new ArrayList<>();
+    private RecyclerView recyclerViewTarefa,recyclerViewTarefaRapida;
     private Tarefa tarefaSelected;
+    private Tarefa_Rapida tarefaRapidaSelected;
     private int itemSelected;
-    private FloatingActionButton fab;
+    private FloatingActionMenu btnaddTarefaGeral;
+    private TextView txtTarefa, txtTarefaRapida;
+    private ImageView imgDivisor;
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -78,17 +66,64 @@ public class MainActivity extends AppCompatActivity{
 
         rateUs(); // para avaliação na play store:
 
-        //DbHelper dbHelper = new DbHelper(getApplicationContext());
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        fab = findViewById(R.id.fab);
-        recycler = findViewById(R.id.recyclerView);
+        recyclerViewTarefa = findViewById(R.id.recyclerView);
+        recyclerViewTarefaRapida = findViewById(R.id.recyclerViewTarefaRapida);
+        btnaddTarefaGeral = findViewById(R.id.addTarefaGeral);
+        txtTarefa = findViewById(R.id.txtTarefaNormal);
+        txtTarefaRapida = findViewById(R.id.txtTarefaRapida);
+        imgDivisor = findViewById(R.id.imgDivisor);
 
         setSupportActionBar(binding.toolbar);
 
-        recycler.addOnItemTouchListener(new RecycleViewItemClickListener(getApplicationContext(), recycler, new RecycleViewItemClickListener.OnItemClickListener(){
+        recyclerViewTarefaRapida.addOnItemTouchListener(new RecycleViewItemClickListener(getApplicationContext(), recyclerViewTarefaRapida, new RecycleViewItemClickListener.OnItemClickListener(){
+            @Override
+            public void onItemClick(View view, int position) { // para editar
+
+                Tarefa_Rapida tarefaSelecionada = tarefaRapidaList.get( position );
+                Intent intent = new Intent( MainActivity.this, AddTarefaRapida.class );
+                intent.putExtra( "tarefaSelecionada" , tarefaSelecionada );
+                startActivity( intent );
+
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) { // para deletar
+
+                tarefaRapidaSelected = tarefaRapidaList.get( position );
+
+                AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+                dialog.setTitle( getApplicationContext().getResources().getString(R.string.confExclusaoPT) + "\n" );
+                dialog.setMessage( getApplicationContext().getResources().getString(R.string.desejaExcluirAnotacaoPT2));
+
+                dialog.setPositiveButton(R.string.simPT, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        DaoTarefaRapida daoTarefaRapida = new DaoTarefaRapida( getApplicationContext() );
+                        if( daoTarefaRapida.deletar( tarefaRapidaSelected ) ){
+
+                            carregarLista();
+                        }
+                    }
+                });
+
+                dialog.setNegativeButton(R.string.naoPT, null);
+
+                dialog.create().show();
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+        }));
+
+
+        recyclerViewTarefa.addOnItemTouchListener(new RecycleViewItemClickListener(getApplicationContext(), recyclerViewTarefa, new RecycleViewItemClickListener.OnItemClickListener(){
             @Override
             public void onItemClick(View view, int position) { // para editar
 
@@ -104,96 +139,96 @@ public class MainActivity extends AppCompatActivity{
                 tarefaSelected = tarefaList.get( position );
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-                dialog.setTitle( "Confirmar exclusão\n" );
-                dialog.setMessage( "Deseja excluir esta anotação: " + tarefaSelected.getTitulo() + "?" );
+                dialog.setTitle( getApplicationContext().getResources().getString(R.string.confExclusaoPT) + "\n" );
+                dialog.setMessage( getApplicationContext().getResources().getString(R.string.desejaExcluirAnotacaoPT) + " " + tarefaSelected.getTitulo() + "?" );
 
-                dialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                dialog.setPositiveButton(R.string.simPT, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        Dao daoDeletar = new Dao( getApplicationContext() );
+                        DaoTarefa daoDeletar = new DaoTarefa( getApplicationContext() );
                         if( daoDeletar.deletar( tarefaSelected ) ){
 
                             if( itemSelected == 0 ){
                                 carregarLista();
                             }else if( itemSelected == 1 ){
 
-                                Dao dao = new Dao(getApplicationContext());
+                                DaoTarefa dao = new DaoTarefa(getApplicationContext());
                                 tarefaList = dao.listarTitulo();
 
-                                Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
+                                AdapterTarefa adapter = new AdapterTarefa( tarefaList,getApplicationContext() );
 
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
-                                recycler.setLayoutManager( layoutManager );
-                                recycler.setHasFixedSize(true);
-                                recycler.setAdapter( adapter );
+                                recyclerViewTarefa.setLayoutManager( layoutManager );
+                                recyclerViewTarefa.setHasFixedSize(true);
+                                recyclerViewTarefa.setAdapter( adapter );
 
                             } else if( itemSelected == 2 ){
 
-                                Dao dao = new Dao(getApplicationContext());
+                                DaoTarefa dao = new DaoTarefa(getApplicationContext());
                                 tarefaList = dao.listar( "data" ); // carregando lista baseado no status (status,titulo,horario)
 
-                                Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
+                                AdapterTarefa adapter = new AdapterTarefa( tarefaList,getApplicationContext() );
 
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
-                                recycler.setLayoutManager( layoutManager );
-                                recycler.setHasFixedSize(true);
-                                recycler.setAdapter( adapter );
+                                recyclerViewTarefa.setLayoutManager( layoutManager );
+                                recyclerViewTarefa.setHasFixedSize(true);
+                                recyclerViewTarefa.setAdapter( adapter );
                             } else if( itemSelected == 3 ){
 
-                                Dao dao = new Dao(getApplicationContext());
+                                DaoTarefa dao = new DaoTarefa(getApplicationContext());
                                 tarefaList = dao.listarSttsConcluido();
 
-                                Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
+                                AdapterTarefa adapter = new AdapterTarefa( tarefaList,getApplicationContext() );
 
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
-                                recycler.setLayoutManager( layoutManager );
-                                recycler.setHasFixedSize(true);
-                                recycler.setAdapter( adapter );
+                                recyclerViewTarefa.setLayoutManager( layoutManager );
+                                recyclerViewTarefa.setHasFixedSize(true);
+                                recyclerViewTarefa.setAdapter( adapter );
                             } else if( itemSelected == 4 ){
 
-                                Dao dao = new Dao(getApplicationContext());
+                                DaoTarefa dao = new DaoTarefa(getApplicationContext());
                                 tarefaList = dao.listarSttsNaoConcluido();
 
-                                Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
+                                AdapterTarefa adapter = new AdapterTarefa( tarefaList,getApplicationContext() );
 
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
-                                recycler.setLayoutManager( layoutManager );
-                                recycler.setHasFixedSize(true);
-                                recycler.setAdapter( adapter );
+                                recyclerViewTarefa.setLayoutManager( layoutManager );
+                                recyclerViewTarefa.setHasFixedSize(true);
+                                recyclerViewTarefa.setAdapter( adapter );
                             } else if( itemSelected == 5 ){
 
-                                Dao dao = new Dao(getApplicationContext());
+                                DaoTarefa dao = new DaoTarefa(getApplicationContext());
                                 tarefaList = dao.listarSemStts();
 
-                                Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
+                                AdapterTarefa adapter = new AdapterTarefa( tarefaList,getApplicationContext() );
 
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
-                                recycler.setLayoutManager( layoutManager );
-                                recycler.setHasFixedSize(true);
-                                recycler.setAdapter( adapter );
+                                recyclerViewTarefa.setLayoutManager( layoutManager );
+                                recyclerViewTarefa.setHasFixedSize(true);
+                                recyclerViewTarefa.setAdapter( adapter );
                             }else if( itemSelected == 6 ){
 
-                                Dao dao = new Dao(getApplicationContext());
+                                DaoTarefa dao = new DaoTarefa(getApplicationContext());
                                 tarefaList = dao.listarFav();
 
-                                Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
+                                AdapterTarefa adapter = new AdapterTarefa( tarefaList,getApplicationContext() );
 
                                 RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
-                                recycler.setLayoutManager( layoutManager );
-                                recycler.setHasFixedSize(true);
-                                recycler.setAdapter( adapter );
+                                recyclerViewTarefa.setLayoutManager( layoutManager );
+                                recyclerViewTarefa.setHasFixedSize(true);
+                                recyclerViewTarefa.setAdapter( adapter );
                             }
 
                         }else{
                             Toast.makeText(getApplicationContext(),
-                                    "Erro ao excluir tarefa",Toast.LENGTH_SHORT).show();
+                                    R.string.erroAoExcluirTarefaPT,Toast.LENGTH_SHORT).show();
                         }
 
                     }
                 });
 
-                dialog.setNegativeButton("Não", null);
+                dialog.setNegativeButton(R.string.naoPT, null);
 
                 dialog.create().show();
             }
@@ -203,13 +238,14 @@ public class MainActivity extends AppCompatActivity{
 
             }
         }));
+    }
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity( new Intent( getApplicationContext(), AddTarefa.class ) );
-            }
-        });
+    public void addTarefa(View view){
+        startActivity( new Intent( getApplicationContext(), AddTarefa.class ) );
+    }
+
+    public void addTarefaRapida(View view){
+        startActivity( new Intent( getApplicationContext(), AddTarefaRapida.class ) );
     }
 
     @Override
@@ -219,9 +255,22 @@ public class MainActivity extends AppCompatActivity{
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        carregarLista();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        carregarLista();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        int time = 604800; // 15 dias = 1296000 e 7 dias = 604800 e 9 dias = 777.600
+
+        int time = 129600; // 15 dias = 1.296.000 e 9 dias = 777.600 e 7 dias = 604.800 e 1,5 dia = 129.600
         Intent i = new Intent(MainActivity.this, Alarm.class);
 
         PendingIntent pi = PendingIntent.getBroadcast(getApplicationContext(),0,i,0);
@@ -232,38 +281,74 @@ public class MainActivity extends AppCompatActivity{
 
     public void rateUs(){
         AppRate.with(this)
-                .setInstallDays(5) // quantos dias depois que instalou o app para aparecer este dialogo
-                .setLaunchTimes(7) // quantas vezes abrir o app para aparecer este dialogo
-                .setRemindInterval(1) // quantos dias para aparecer de novo depois do usuario
+                .setInstallDays( 1 ) // quantos dias depois que instalou o app para aparecer este dialogo
+                .setLaunchTimes( 3 ) // quantas vezes abrir o app para aparecer este dialogo
+                .setRemindInterval( 1 ) // quantos dias para aparecer de novo depois do usuario
                 // clicar em "Talves mais tarde"
-                .setTitle("Está curtindo o app?")
-                .setMessage("Ajude-nos e avalie enviando seu feedback para Play Store! ⭐⭐⭐⭐⭐")
-                .setTextNever("Nunca")
-                .setTextRateNow("Avaliar agora")
-                .setTextLater("Talves mais tarde")
+                .setTitle(R.string.estaCurtindoAppPT)
+                .setMessage(R.string.ajudeEnviandoFeedbackPlayStorePT)
+                .setTextNever(R.string.nuncaPT)
+                .setTextRateNow(R.string.avaliarAgoraPT)
+                .setTextLater(R.string.talvezMaisTardePT)
                 .monitor();
         AppRate.showRateDialogIfMeetsConditions(this);
     }
 
+    public void atualizarTextosInformativos(){
+
+        if( tarefaRapidaList.isEmpty() ){
+            txtTarefaRapida.setVisibility(View.VISIBLE);
+            imgDivisor.setVisibility( View.GONE );
+        }else {
+            txtTarefaRapida.setVisibility(View.GONE);
+            imgDivisor.setVisibility( View.VISIBLE );
+        }
+
+        if( tarefaList.isEmpty() ){
+            txtTarefa.setVisibility(View.VISIBLE);
+        }else {
+            txtTarefa.setVisibility(View.GONE);
+        }
+
+    }
+
     @SuppressLint("ResourceAsColor")
     public void carregarLista(){
+        // listar tarefas rapidas salvas
+        DaoTarefaRapida daoTarefaRapida = new DaoTarefaRapida( getApplicationContext() );
+        tarefaRapidaList = daoTarefaRapida.listar();
+
+        AdapterTarefaRapida adapterTarefaRapida = new AdapterTarefaRapida( tarefaRapidaList );
+
+        RecyclerView.LayoutManager layoutManagerHorizontal = new LinearLayoutManager(
+                getApplicationContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+        );
+        recyclerViewTarefaRapida.setLayoutManager( layoutManagerHorizontal );
+        recyclerViewTarefaRapida.setHasFixedSize( true );
+        recyclerViewTarefaRapida.setAdapter( adapterTarefaRapida );
 
         // listar as tarefas salvas
-        Dao dao = new Dao(getApplicationContext());
-        tarefaList = dao.listar( "status" ); // carregando lista baseado no status (status,titulo,horario)
+        DaoTarefa dao = new DaoTarefa(getApplicationContext());
+        tarefaList = dao.listar( "status" );
 
-        Adapter adapter = new Adapter( tarefaList,getApplicationContext() );
+        AdapterTarefa adapter = new AdapterTarefa( tarefaList, getApplicationContext() );
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
-        recycler.setLayoutManager( layoutManager );
-        recycler.setHasFixedSize(true);
-        recycler.setAdapter( adapter );
+        recyclerViewTarefa.setLayoutManager( layoutManager );
+        recyclerViewTarefa.setHasFixedSize(true);
+        recyclerViewTarefa.setAdapter( adapter );
 
-        if(tarefaList.size() > 5){
-            fab.setAlpha(0.60f);
+
+        if(tarefaList.size() >= 4){
+            btnaddTarefaGeral.setAlpha(0.60f);
         }else {
-            fab.setAlpha(1f);
+            btnaddTarefaGeral.setAlpha(1f);
         }
+
+        atualizarTextosInformativos();
+
     }
 
     @Override
@@ -287,19 +372,10 @@ public class MainActivity extends AppCompatActivity{
 
                 break;
 
-            case R.id.itemOrdenarPrioridade: // 0
+            case R.id.itemOrdenarPadrao: // 0
 
                 itemSelected = 0;
-
-                Dao dao0 = new Dao(getApplicationContext());
-                tarefaList = dao0.listar( "status" );
-
-                Adapter adapter0 = new Adapter( tarefaList,getApplicationContext() );
-
-                RecyclerView.LayoutManager layoutManager0 = new LinearLayoutManager( getApplicationContext() );
-                recycler.setLayoutManager( layoutManager0 );
-                recycler.setHasFixedSize(true);
-                recycler.setAdapter( adapter0 );
+                carregarLista();
 
                 break;
 
@@ -308,15 +384,15 @@ public class MainActivity extends AppCompatActivity{
                 itemSelected = 1;
 
                 // listar as tarefas salvas
-                Dao dao1 = new Dao(getApplicationContext());
+                DaoTarefa dao1 = new DaoTarefa(getApplicationContext());
                 tarefaList = dao1.listarTitulo();
 
-                Adapter adapter1 = new Adapter( tarefaList,getApplicationContext() );
+                AdapterTarefa adapter1 = new AdapterTarefa( tarefaList,getApplicationContext() );
 
                 RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager( getApplicationContext() );
-                recycler.setLayoutManager( layoutManager1 );
-                recycler.setHasFixedSize(true);
-                recycler.setAdapter( adapter1 );
+                recyclerViewTarefa.setLayoutManager( layoutManager1 );
+                recyclerViewTarefa.setHasFixedSize(true);
+                recyclerViewTarefa.setAdapter( adapter1 );
 
                 break;
 
@@ -325,77 +401,135 @@ public class MainActivity extends AppCompatActivity{
                 itemSelected = 2;
 
                 // listar as tarefas salvas
-                Dao dao2 = new Dao(getApplicationContext());
+                DaoTarefa dao2 = new DaoTarefa(getApplicationContext());
                 tarefaList = dao2.listar( "data" ); // carregando lista baseado no status (status,titulo,horario)
 
-                Adapter adapter2 = new Adapter( tarefaList,getApplicationContext() );
+                AdapterTarefa adapter2 = new AdapterTarefa( tarefaList,getApplicationContext() );
 
                 RecyclerView.LayoutManager layoutManager2 = new LinearLayoutManager( getApplicationContext() );
-                recycler.setLayoutManager( layoutManager2 );
-                recycler.setHasFixedSize(true);
-                recycler.setAdapter( adapter2 );
+                recyclerViewTarefa.setLayoutManager( layoutManager2 );
+                recyclerViewTarefa.setHasFixedSize(true);
+                recyclerViewTarefa.setAdapter( adapter2 );
 
                 break;
 
 
             case R.id.itemOrdenarStatusConcluido: // 3
 
+                imgDivisor.setVisibility( View.GONE );
+
+                List<Tarefa_Rapida> l = new ArrayList<>();
+                tarefaRapidaList = l;
+                AdapterTarefaRapida adapterTarefaRapida = new AdapterTarefaRapida( tarefaRapidaList );
+
+                RecyclerView.LayoutManager layoutManagerHorizontal = new LinearLayoutManager(
+                        getApplicationContext(),
+                        LinearLayoutManager.HORIZONTAL,
+                        false
+                );
+                recyclerViewTarefaRapida.setLayoutManager( layoutManagerHorizontal );
+                recyclerViewTarefaRapida.setHasFixedSize( true );
+                recyclerViewTarefaRapida.setAdapter( adapterTarefaRapida );
+
                 itemSelected = 3;
 
-                Dao dao3 = new Dao(getApplicationContext());
+                DaoTarefa dao3 = new DaoTarefa(getApplicationContext());
                 tarefaList = dao3.listarSttsConcluido();
 
-                Adapter adapter3 = new Adapter( tarefaList,getApplicationContext() );
+                AdapterTarefa adapter3 = new AdapterTarefa( tarefaList,getApplicationContext() );
 
                 RecyclerView.LayoutManager layoutManager3 = new LinearLayoutManager( getApplicationContext() );
-                recycler.setLayoutManager( layoutManager3 );
-                recycler.setHasFixedSize(true);
-                recycler.setAdapter( adapter3 );
+                recyclerViewTarefa.setLayoutManager( layoutManager3 );
+                recyclerViewTarefa.setHasFixedSize(true);
+                recyclerViewTarefa.setAdapter( adapter3 );
                 break;
 
             case R.id.itemOrdenarStatusNaoConcluido: // 4
 
+                imgDivisor.setVisibility( View.GONE );
+
+                List<Tarefa_Rapida> l2 = new ArrayList<>();
+                tarefaRapidaList = l2;
+                AdapterTarefaRapida adapterTarefaRapida2 = new AdapterTarefaRapida( tarefaRapidaList );
+
+                RecyclerView.LayoutManager layoutManagerHorizontal2 = new LinearLayoutManager(
+                        getApplicationContext(),
+                        LinearLayoutManager.HORIZONTAL,
+                        false
+                );
+                recyclerViewTarefaRapida.setLayoutManager( layoutManagerHorizontal2 );
+                recyclerViewTarefaRapida.setHasFixedSize( true );
+                recyclerViewTarefaRapida.setAdapter( adapterTarefaRapida2 );
+
                 itemSelected = 4;
 
-                Dao dao4 = new Dao(getApplicationContext());
+                DaoTarefa dao4 = new DaoTarefa(getApplicationContext());
                 tarefaList = dao4.listarSttsNaoConcluido();
 
-                Adapter adapter4 = new Adapter( tarefaList,getApplicationContext() );
+                AdapterTarefa adapter4 = new AdapterTarefa( tarefaList,getApplicationContext() );
 
                 RecyclerView.LayoutManager layoutManager4 = new LinearLayoutManager( getApplicationContext() );
-                recycler.setLayoutManager( layoutManager4 );
-                recycler.setHasFixedSize(true);
-                recycler.setAdapter( adapter4 );
+                recyclerViewTarefa.setLayoutManager( layoutManager4 );
+                recyclerViewTarefa.setHasFixedSize(true);
+                recyclerViewTarefa.setAdapter( adapter4 );
                 break;
 
             case R.id.itemOrdenarSemStatus: // 5
 
+                imgDivisor.setVisibility( View.GONE );
+
+                List<Tarefa_Rapida> l3 = new ArrayList<>();
+                tarefaRapidaList = l3;
+                AdapterTarefaRapida adapterTarefaRapida3 = new AdapterTarefaRapida( tarefaRapidaList );
+
+                RecyclerView.LayoutManager layoutManagerHorizontal3 = new LinearLayoutManager(
+                        getApplicationContext(),
+                        LinearLayoutManager.HORIZONTAL,
+                        false
+                );
+                recyclerViewTarefaRapida.setLayoutManager( layoutManagerHorizontal3 );
+                recyclerViewTarefaRapida.setHasFixedSize( true );
+                recyclerViewTarefaRapida.setAdapter( adapterTarefaRapida3 );
+
                 itemSelected = 5;
 
-                Dao dao5 = new Dao(getApplicationContext());
+                DaoTarefa dao5 = new DaoTarefa(getApplicationContext());
                 tarefaList = dao5.listarSemStts();
 
-                Adapter adapter5 = new Adapter( tarefaList,getApplicationContext() );
+                AdapterTarefa adapter5 = new AdapterTarefa( tarefaList,getApplicationContext() );
 
                 RecyclerView.LayoutManager layoutManager5 = new LinearLayoutManager( getApplicationContext() );
-                recycler.setLayoutManager( layoutManager5 );
-                recycler.setHasFixedSize(true);
-                recycler.setAdapter( adapter5 );
+                recyclerViewTarefa.setLayoutManager( layoutManager5 );
+                recyclerViewTarefa.setHasFixedSize(true);
+                recyclerViewTarefa.setAdapter( adapter5 );
                 break;
 
             case R.id.itemExibirFav:
 
+                List<Tarefa_Rapida> l4 = new ArrayList<>();
+                tarefaRapidaList = l4;
+                AdapterTarefaRapida adapterTarefaRapida4 = new AdapterTarefaRapida( tarefaRapidaList );
+
+                RecyclerView.LayoutManager layoutManagerHorizontal4 = new LinearLayoutManager(
+                        getApplicationContext(),
+                        LinearLayoutManager.HORIZONTAL,
+                        false
+                );
+                recyclerViewTarefaRapida.setLayoutManager( layoutManagerHorizontal4 );
+                recyclerViewTarefaRapida.setHasFixedSize( true );
+                recyclerViewTarefaRapida.setAdapter( adapterTarefaRapida4 );
+
                 itemSelected = 6;
 
-                Dao dao6 = new Dao(getApplicationContext());
+                DaoTarefa dao6 = new DaoTarefa(getApplicationContext());
                 tarefaList = dao6.listarFav();
 
-                Adapter adapter6 = new Adapter( tarefaList,getApplicationContext() );
+                AdapterTarefa adapter6 = new AdapterTarefa( tarefaList,getApplicationContext() );
 
                 RecyclerView.LayoutManager layoutManager6 = new LinearLayoutManager( getApplicationContext() );
-                recycler.setLayoutManager( layoutManager6 );
-                recycler.setHasFixedSize(true);
-                recycler.setAdapter( adapter6 );
+                recyclerViewTarefa.setLayoutManager( layoutManager6 );
+                recyclerViewTarefa.setHasFixedSize(true);
+                recyclerViewTarefa.setAdapter( adapter6 );
 
                 break;
         }

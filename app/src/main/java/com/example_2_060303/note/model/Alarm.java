@@ -44,14 +44,14 @@ public class Alarm extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context,"Minha notificação");
 
         String[] arrayFrases = {
-                "Não perca nada, anote e compartilhe!",
-                "Você já fez tudo que programou para hoje?",
-                "Comece aqui o primeiro rascunho de suas ideias!\uD83D\uDE09",
-                "Lembre-se de organizar suas notas!\uD83D\uDCDD"
+                String.valueOf(context.getApplicationContext().getResources().getString(R.string.naoPercaNadaAnoteECompartilhePT)),
+                String.valueOf(context.getApplicationContext().getResources().getString(R.string.vcJaFezTudoOqPlanejouHjPT)),
+                        context.getApplicationContext().getResources().getString(R.string.comeceSeu1RascunhoPT) + "\uD83D\uDE09",
+                                context.getApplicationContext().getResources().getString(R.string.lembreDeOrganizarNotasPT) + "\uD83D\uDCDD"
         };
         int numeroAleatorio = new Random().nextInt(4);
 
-        builder.setContentTitle("Não esqueça de suas tarefas!✍✍");
+        builder.setContentTitle(String.valueOf(context.getApplicationContext().getResources().getString(R.string.nEsquecaDasSuasTarefasPT)));
         builder.setContentIntent( resultPendingIntent );
         builder.setContentText( arrayFrases[numeroAleatorio] );
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

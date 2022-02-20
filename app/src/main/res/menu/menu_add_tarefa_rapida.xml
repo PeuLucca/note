@@ -11,14 +11,6 @@
         />
 
     <item
-        android:id="@+id/itemFavoritar"
-        android:title="@string/FavoritarPT"
-        app:showAsAction="always"
-        android:orderInCategory="1"
-        android:icon="@drawable/ic_baseline_star_border_24"
-        />
-
-    <item
         android:id="@+id/itemDelete"
         android:title="@string/deletarTarefaPT"
         app:showAsAction="always"
@@ -32,24 +24,6 @@
         app:showAsAction="always"
         android:orderInCategory="1"
         android:icon="@drawable/ic_share_24"
-        />
-
-    <item
-        android:id="@+id/itemStatusPositivo"
-        android:title="@string/concluidoPT"
-        android:orderInCategory="1"
-        />
-
-    <item
-        android:id="@+id/itemStatusNegativo"
-        android:title="@string/naoConcluidoPT"
-        android:orderInCategory="1"
-        />
-
-    <item
-        android:id="@+id/itemSemStatus"
-        android:title="@string/semSttsPT"
-        android:orderInCategory="1"
         />
 
 </menu>

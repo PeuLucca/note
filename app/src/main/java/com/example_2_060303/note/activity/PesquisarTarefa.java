@@ -16,9 +16,9 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.example_2_060303.note.R;
-import com.example_2_060303.note.adapter.Adapter;
+import com.example_2_060303.note.adapter.AdapterTarefa;
 import com.example_2_060303.note.adapter.RecycleViewItemClickListener;
-import com.example_2_060303.note.helper.Dao;
+import com.example_2_060303.note.helper.DaoTarefa;
 import com.example_2_060303.note.model.Tarefa;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.List;
 public class PesquisarTarefa extends AppCompatActivity {
 
     private List<Tarefa> lista = new ArrayList<>();
-    private Adapter adap;
+    private AdapterTarefa adap;
     private RecyclerView recyclerView;
     private Tarefa tarefaSelected;
 
@@ -39,7 +39,7 @@ public class PesquisarTarefa extends AppCompatActivity {
 
         lista = (List<Tarefa>) getIntent().getSerializableExtra("tarefa");
 
-        adap = new Adapter(lista,getApplicationContext());
+        adap = new AdapterTarefa(lista,getApplicationContext());
 
         carregarLista();
 
@@ -63,22 +63,22 @@ public class PesquisarTarefa extends AppCompatActivity {
                 tarefaSelected = lista.get( position );
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(PesquisarTarefa.this);
-                dialog.setTitle( "Confirmar exclusão\n" );
-                dialog.setMessage( "Deseja excluir esta anotação: " + tarefaSelected.getTitulo() + "?" );
-                dialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                dialog.setTitle( getApplicationContext().getResources().getString(R.string.confExclusaoPT) +  "\n" );
+                dialog.setMessage( getApplicationContext().getResources().getString(R.string.desejaExcluirAnotacaoPT) + tarefaSelected.getTitulo() + "?" );
+                dialog.setPositiveButton(R.string.simPT, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Dao daoDeletar = new Dao( getApplicationContext() );
+                        DaoTarefa daoDeletar = new DaoTarefa( getApplicationContext() );
                         if( daoDeletar.deletar( tarefaSelected ) ){
                             // tarefa deletada
                             carregarLista();
                         }else {
                             Toast.makeText(getApplicationContext(),
-                                    "Erro ao excluir tarefa",Toast.LENGTH_SHORT).show();
+                                    R.string.erroAoExcluirTarefaPT,Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-                dialog.setNegativeButton("Não", null);
+                dialog.setNegativeButton(R.string.naoPT, null);
                 dialog.create().show();
             }
         }
@@ -101,10 +101,10 @@ public class PesquisarTarefa extends AppCompatActivity {
     public void carregarLista(){
 
         // listar as tarefas salvas
-        Dao dao = new Dao(getApplicationContext());
+        DaoTarefa dao = new DaoTarefa(getApplicationContext());
         lista = dao.listar( "status" );
 
-        adap = new Adapter(lista,getApplicationContext());
+        adap = new AdapterTarefa(lista,getApplicationContext());
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( getApplicationContext() );
         recyclerView.setLayoutManager( layoutManager );

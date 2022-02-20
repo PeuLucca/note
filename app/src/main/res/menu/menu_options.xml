@@ -4,43 +4,43 @@
 
     <item
         android:id="@+id/pesquisar_por_nome"
-        android:title="Pesquisar por nome"
+        android:title="@string/pesqPornomePT"
         android:orderInCategory="1"
         />
 
     <item
-        android:id="@+id/itemOrdenarPrioridade"
-        android:title="Ordenar Padrão"
+        android:id="@+id/itemOrdenarPadrao"
+        android:title="@string/ordenarPadraoPT"
         android:orderInCategory="1"
         />
 
     <item
         android:id="@+id/itemOrdenarA_Z"
-        android:title="Ordenar de A-Z"
+        android:title="@string/ordenarA_zPT"
         android:orderInCategory="1"
         />
 
     <item
         android:id="@+id/itemOrdenarData"
-        android:title="Ordenar por Data"
+        android:title="@string/ordenarDataPT"
         android:orderInCategory="1"
         />
 
     <item
         android:id="@+id/itemOrdenarStatusConcluido"
-        android:title="Filtrar por Status Concluido"
+        android:title="@string/filtrarPorSttsConcluidoPT"
         android:orderInCategory="1"
         />
 
     <item
         android:id="@+id/itemOrdenarStatusNaoConcluido"
-        android:title="Filtrar por Status Não Concluido"
+        android:title="@string/filtrarPorSttsNConcluidoPT"
         android:orderInCategory="1"
         />
 
     <item
         android:id="@+id/itemOrdenarSemStatus"
-        android:title="Filtrar por Sem Status"
+        android:title="@string/filtrarPorSemSttsPT"
         android:orderInCategory="1"
         />
 
@@ -48,13 +48,13 @@
 
     <item
         android:id="@+id/itemExibirFav"
-        android:title="Filtrar por Favoritos"
+        android:title="@string/filtrarPorFavoritoPT"
         android:orderInCategory="1"
         />
 <!--
         <item
             android:id="@+id/itemConf"
-            android:title="Configurações"
+            android:title="@string/configuracoesPT"
             android:orderInCategory="1"
             />
     -->

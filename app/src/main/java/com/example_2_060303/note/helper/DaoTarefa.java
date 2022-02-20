@@ -8,15 +8,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
 import com.example_2_060303.note.model.Tarefa;
+import com.example_2_060303.note.model.Tarefa_Rapida;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Dao implements IDao {
+public class DaoTarefa implements IDaoTarefa {
 
     private SQLiteDatabase escreve,le;
 
-    public Dao(Context context) {
+    public DaoTarefa(Context context) {
             // toda vez ao salvar, deletar, atualizar ou listar
             DbHelper dbHelper = new DbHelper( context );
             escreve = dbHelper.getWritableDatabase();

@@ -3,29 +3,23 @@ package com.example_2_060303.note.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.LinkMovementMethod;
-import android.text.method.ScrollingMovementMethod;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example_2_060303.note.R;
-import com.example_2_060303.note.helper.Dao;
+import com.example_2_060303.note.helper.DaoTarefa;
 import com.example_2_060303.note.model.Tarefa;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class AddTarefa extends AppCompatActivity {
 
@@ -79,16 +73,16 @@ public class AddTarefa extends AppCompatActivity {
                         !conteudo.getText().toString().equals(cont)
                 ){
                     AlertDialog.Builder dialog2 = new AlertDialog.Builder(AddTarefa.this);
-                    dialog2.setTitle("Atenção!");
-                    dialog2.setMessage("Deseja salvar as alterações antes de sair?");
-                    dialog2.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    dialog2.setTitle(R.string.atencaoPT);
+                    dialog2.setMessage(R.string.salvarAlteracoesAntesDeSairPT);
+                    dialog2.setNegativeButton(R.string.naoPT, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             finish();
                         }
                     });
 
-                    dialog2.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    dialog2.setPositiveButton(R.string.simPT, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             if( title.equals("") && cont.equals("") ){
@@ -115,12 +109,12 @@ public class AddTarefa extends AppCompatActivity {
         descricaoString = descricao.getText().toString();
         conteudoString = conteudo.getText().toString();
 
-        Dao dao = new Dao(getApplicationContext());
+        DaoTarefa dao = new DaoTarefa(getApplicationContext());
 
         if( tarefaAtual == null ) { // se for para salvar e nao atualizar
-            if (tituloString.isEmpty() || conteudoString.isEmpty()) {
+            if ( tituloString.isEmpty() || conteudoString.isEmpty() ) {
                 Toast.makeText(getApplicationContext(),
-                        "Insira os campos obrigatórios", Toast.LENGTH_SHORT).show();
+                        R.string.insiraCamposObrigatoriosPT, Toast.LENGTH_SHORT).show();
             } else {
                 Tarefa tarefa = new Tarefa();
                 tarefa.setTitulo(tituloString);
@@ -142,22 +136,22 @@ public class AddTarefa extends AppCompatActivity {
                 if (dao.salvar(tarefa)) {
                     finish();
                     Toast.makeText(getApplicationContext(),
-                            "Tarefa salva com sucesso", Toast.LENGTH_SHORT).show();
+                            R.string.tarefaSalvaComSucessoPT, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getApplicationContext(),
-                            "Erro ao salvar tarefa", Toast.LENGTH_LONG).show();
+                            R.string.erroAoSalvarTarefaPT, Toast.LENGTH_LONG).show();
                 }
             }
         }else{ // se for para atualizar
 
             if ( tarefaAtual.getTitulo().isEmpty() || tarefaAtual.getConteudo().isEmpty() ) {
                 Toast.makeText(getApplicationContext(),
-                        "Insira os campos obrigatórios", Toast.LENGTH_SHORT).show();
+                        R.string.insiraCamposObrigatoriosPT, Toast.LENGTH_SHORT).show();
             }else {
 
                 if( titulo.getText().toString().equals("") || conteudo.getText().toString().equals("") ){
                     Toast.makeText(getApplicationContext(),
-                            "Insira os campos obrigatórios", Toast.LENGTH_SHORT).show();
+                            R.string.insiraCamposObrigatoriosPT, Toast.LENGTH_SHORT).show();
                 }else {
                     Tarefa tarefa = new Tarefa();
                     tarefa.setTitulo(tituloString);
@@ -182,10 +176,10 @@ public class AddTarefa extends AppCompatActivity {
                     if (dao.atualizar(tarefa)) {
                         finish();
                         Toast.makeText(getApplicationContext(),
-                                "Tarefa atualizada com sucesso", Toast.LENGTH_SHORT).show();
+                                R.string.tarefaAtualizadaComSucessoPT, Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getApplicationContext(),
-                                "Erro ao atualizar tarefa", Toast.LENGTH_SHORT).show();
+                                R.string.erroAtualizarTarefaPT, Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -197,9 +191,9 @@ public class AddTarefa extends AppCompatActivity {
 
         if( titulo.getText().toString().isEmpty() || conteudo.getText().toString().isEmpty() ){
             Toast.makeText(getApplicationContext(),
-                    "Salve a anotação para favoritar",Toast.LENGTH_SHORT).show();
+                    R.string.salveAnotacaoParaFavoritarPT,Toast.LENGTH_SHORT).show();
         }else {
-            Dao dao = new Dao(getApplicationContext());
+            DaoTarefa dao = new DaoTarefa(getApplicationContext());
 
             if( dao.verificarFav(titulo.getText().toString(),conteudo.getText().toString()) ){
                 Tarefa tarefa = new Tarefa();
@@ -213,17 +207,17 @@ public class AddTarefa extends AppCompatActivity {
 
                 if( dao.atualizarFav(tarefa) ){
                     if( tarefaAtual.getFavorito().equals(0L) ){
-                        Toast.makeText(getApplicationContext(),"Favoritado",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),R.string.favoritadoPT,Toast.LENGTH_SHORT).show();
                     }else {
-                        Toast.makeText(getApplicationContext(),"Desfavoritado",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),R.string.desfavoritadoPT,Toast.LENGTH_SHORT).show();
                     }
 
                 }else {
-                    Toast.makeText(getApplicationContext(),"Erro ao favoritar/desfavoritar tarefa",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),R.string.erroAoFav_DesfPT,Toast.LENGTH_SHORT).show();
                 }
             }else {
                 Toast.makeText(getApplicationContext(),
-                        "Salve a tarefa e então tente favoritar/desfavoritar",Toast.LENGTH_LONG).show();
+                        R.string.salveTarefaFav_DesfPT,Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -246,7 +240,7 @@ public class AddTarefa extends AppCompatActivity {
                 if( title.equals("") && cont.equals("") ){
                     salvar(100L);
                 }else {
-                    salvar(tarefaAtual.getStatus());
+                    salvar( tarefaAtual.getStatus() );
                 }
                 break;
 
@@ -258,7 +252,7 @@ public class AddTarefa extends AppCompatActivity {
 
                 if( titulo.getText().toString().isEmpty() || conteudo.getText().toString().isEmpty() ){
                     Toast.makeText(getApplicationContext(),
-                            "Salve uma tarefa antes de alterar seu status", Toast.LENGTH_SHORT).show();
+                            R.string.salveTarefaAntesDeAlterarPT, Toast.LENGTH_SHORT).show();
                 }else {
                     salvar(1L);
                 }
@@ -269,7 +263,7 @@ public class AddTarefa extends AppCompatActivity {
 
                 if( titulo.getText().toString().isEmpty() || conteudo.getText().toString().isEmpty() ){
                     Toast.makeText(getApplicationContext(),
-                            "Salve uma tarefa antes de alterar seu status", Toast.LENGTH_SHORT).show();
+                            R.string.salveTarefaAntesDeAlterarPT, Toast.LENGTH_SHORT).show();
                 }else {
                     salvar(0L);
                 }
@@ -285,7 +279,7 @@ public class AddTarefa extends AppCompatActivity {
 
             case R.id.itemDelete:
 
-                Dao dao2 = new Dao(getApplicationContext());
+                DaoTarefa dao2 = new DaoTarefa(getApplicationContext());
                 if(!titulo.getText().toString().equals("") && !conteudo.getText().toString().equals("")){
 
                     List<Tarefa> lista = new ArrayList<>();
@@ -294,10 +288,10 @@ public class AddTarefa extends AppCompatActivity {
                     if( !lista.isEmpty() ) {
 
                         AlertDialog.Builder dialog = new AlertDialog.Builder( AddTarefa.this );
-                        dialog.setTitle( "Confirmar exclusão\n" );
-                        dialog.setMessage( "Deseja excluir esta anotação ?" );
+                        dialog.setTitle( getApplicationContext().getResources().getString(R.string.confExclusaoPT) + "\n" );
+                        dialog.setMessage( R.string.desejaExcluirAnotacaoPT2);
 
-                        dialog.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                        dialog.setPositiveButton(R.string.simPT, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -305,30 +299,30 @@ public class AddTarefa extends AppCompatActivity {
 
                                     finish();
                                     Toast.makeText(getApplicationContext(),
-                                            "Tarefa excluída",Toast.LENGTH_SHORT).show();
+                                            R.string.tarefaExcluidaPT,Toast.LENGTH_SHORT).show();
 
                                 }else{
                                     Toast.makeText(getApplicationContext(),
-                                            "Erro ao excluir tarefa",Toast.LENGTH_SHORT).show();
+                                            R.string.erroAoExcluirTarefaPT,Toast.LENGTH_SHORT).show();
                                 }
 
                             }
                         });
 
-                        dialog.setNegativeButton("Não", null);
+                        dialog.setNegativeButton(R.string.naoPT, null);
 
                         dialog.create().show();
 
                     }
                     else { // se a tarefa nao existir
                         Toast.makeText(getApplicationContext(),
-                                "Para deletar uma tarefa você precisa tê-la salva",
+                                R.string.paraDeletarPrecisaSalvarPT,
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
                 else { // se a tarefa nao existir
                     Toast.makeText(getApplicationContext(),
-                            "Para deletar uma tarefa você precisa tê-la salva",
+                            R.string.paraDeletarPrecisaSalvarPT,
                             Toast.LENGTH_SHORT).show();
                 }
 
@@ -339,7 +333,7 @@ public class AddTarefa extends AppCompatActivity {
                 if(titulo.getText().toString().isEmpty() || conteudo.getText().toString().isEmpty()){
 
                     Toast.makeText(getApplicationContext(),
-                            "É necessário ter anotações salvas para que possam ser compartilhadas",
+                            R.string.necessarioTerAnotacaoSalvaParaCompartilharPT,
                             Toast.LENGTH_SHORT).show();
 
                 }else {
@@ -348,16 +342,16 @@ public class AddTarefa extends AppCompatActivity {
                     sendIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     sendIntent.setAction (Intent.ACTION_SEND);
                     if( !descricao.getText().toString().isEmpty() ){
-                        sendIntent.putExtra (Intent.EXTRA_TEXT, "Compartilhado através do Bloco de notas - Note:\n\n" +
-                                "Título: " + titulo.getText().toString() +
-                                "\n\nDescrição: \n" + descricao.getText().toString() +
-                                "\n\nConteúdo: \n" + conteudo.getText().toString() +
-                                "\n\n\nBaixe agora https://play.google.com/store/apps/details?id=com.example_2_060303.note");
+                        sendIntent.putExtra (Intent.EXTRA_TEXT, getApplicationContext().getResources().getString(R.string.compartilhadoAtravesdoNotePT) + "\n\n" +
+                                getApplicationContext().getResources().getString(R.string.tituloPT) + titulo.getText().toString() +
+                                "\n\n" + getApplicationContext().getResources().getString(R.string.descricaoPT) +  " \n" + descricao.getText().toString() +
+                                "\n\n" + getApplicationContext().getResources().getString(R.string.conteudoPT) + " \n" + conteudo.getText().toString() +
+                                "\n\n\n" + getApplicationContext().getResources().getString(R.string.baixeAgoraEmPT));
                     }else {
-                        sendIntent.putExtra (Intent.EXTRA_TEXT, "Compartilhado através do Bloco de notas - Note:\n\n" +
-                                "Título: " + titulo.getText().toString() +
-                                "\n\nConteúdo: \n" + conteudo.getText().toString() +
-                                "\n\n\nBaixe agora https://play.google.com/store/apps/details?id=com.example_2_060303.note");
+                        sendIntent.putExtra (Intent.EXTRA_TEXT, getApplicationContext().getResources().getString(R.string.compartilhadoAtravesdoNotePT) + "\n\n" +
+                                getApplicationContext().getResources().getString(R.string.tituloPT) + titulo.getText().toString() +
+                                "\n\n" +getApplicationContext().getResources().getString(R.string.conteudoPT) + " \n" + conteudo.getText().toString() +
+                                "\n\n\n" + getApplicationContext().getResources().getString(R.string.baixeAgoraEmPT) );
                     }
                     sendIntent.setType ("text / plain");
                     startActivity (sendIntent);

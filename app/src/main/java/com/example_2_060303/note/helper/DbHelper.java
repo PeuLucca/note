@@ -9,10 +9,12 @@ import androidx.annotation.Nullable;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-    public static int VERSION_DB = 3;
+    public static int VERSION_DB = 4; // mudando para 4, atual ( da versao 33 - 1.4.1 ) é 3
     public static String NOME_DB = "db_note";
+
     public static String TABELA_TAREFA = "tarefa";
-    private static final String sqlDeletarTBLA = "DROP TABLE IF EXISTS " + TABELA_TAREFA + ";";
+    public static String TABELA_TAREFA_RAPIDA = "tarefa_rapida";
+
     private static final String sqlCriarTarefa =
             "CREATE TABLE IF NOT EXISTS " + TABELA_TAREFA +
             "(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
@@ -23,8 +25,16 @@ public class DbHelper extends SQLiteOpenHelper {
             "data TEXT, " +
             "horario TEXT, " +
             "favoritar INTEGER);";
+
+    private static final String sqlCriarTarefaRapida =
+            "CREATE TABLE IF NOT EXISTS " + TABELA_TAREFA_RAPIDA +
+                    "(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "conteudo TEXT);";
+
     private static final String sqlAddData = "ALTER TABLE " + TABELA_TAREFA + " ADD COLUMN data TEXT;";
+
     private static final String sqlAddHra = "ALTER TABLE " + TABELA_TAREFA + " ADD COLUMN horario TEXT;";
+
     private static final String sqlAddFavorito = "ALTER TABLE " + TABELA_TAREFA + "" +
             " ADD COLUMN favoritar INTEGER;";
 
@@ -38,6 +48,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         try {
             db.execSQL( sqlCriarTarefa );
+            db.execSQL( sqlCriarTarefaRapida );
 
         }catch (Exception e){
 
@@ -55,6 +66,9 @@ public class DbHelper extends SQLiteOpenHelper {
             }
             if( oldVersion < 3 ){
                 db.execSQL( sqlAddFavorito );
+            }
+            if( oldVersion < 4 ){
+                db.execSQL( sqlCriarTarefaRapida );
             }
 
         }catch (Exception e){

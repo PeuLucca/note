@@ -9,8 +9,8 @@ android {
         applicationId "com.example_2_060303.note"
         minSdk 21
         targetSdk 31
-        versionCode 28
-        versionName "1.4"
+        versionCode 39
+        versionName "1.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -47,4 +47,13 @@ dependencies {
     // Rate us:
     implementation 'com.github.hotchemi:android-rate:1.0.1'
 
+    // Google Analytics:
+    implementation 'com.google.firebase:firebase-analytics'
+    
+    // Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:29.0.4')
+
+    // floating action button
+    implementation 'com.github.clans:fab:1.6.4'
 }
+apply plugin: 'com.google.gms.google-services'
